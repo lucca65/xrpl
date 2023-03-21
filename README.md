@@ -1,4 +1,4 @@
-# XRPL
+# XRPL for Elixir
 
 This library intends to help Elixir developers to integrate and use [XRP Ledger Blockchain](https://xrpl.org/).
 
