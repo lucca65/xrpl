@@ -7,8 +7,6 @@ defmodule XRPL.Ledger do
   Official RPC documentation: https://xrpl.org/ledger-methods.html
   """
 
-  use Tesla
-
   import XRPL
 
   @ledger_type ~w(account amendments amm check deposit_preauth directory escrow fee hashes nft_offer offer payment_channel signer_list state ticket)
