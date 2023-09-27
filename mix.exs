@@ -27,7 +27,7 @@ defmodule Xrpl.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tesla, "~> 1.4"},
+      {:tesla, "~> 1.7"},
       {:hackney, "~> 1.17"},
       {:jason, ">= 1.0.0"},
 
