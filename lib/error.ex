@@ -7,6 +7,8 @@ defmodule XRPL.Error do
   def exception(reason, url), do: %__MODULE__{reason: reason, url: url}
 
   def message(%__MODULE__{reason: reason, url: url}) do
-    Logger.error("EOSRPC call failed: #{reason}", url: url)
+    message = "EOSRPC call failed: #{reason}"
+    Logger.error(message, url: url)
+    message
   end
 end

@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["devnet", "EOSRPC", "hotwallet", "noripple", "XRPL"]
+  "cSpell.words": [
+    "devnet",
+    "EOSRPC",
+    "hotwallet",
+    "noripple",
+    "preauth",
+    "trustlines",
+    "XRPL"
+  ]
 }
