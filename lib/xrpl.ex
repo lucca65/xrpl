@@ -25,7 +25,7 @@ defmodule XRPL do
 
   Official documentation: https://xrpl.org/basic-data-types.html#hashes
   """
-  defguard is_hash(value) when is_binary(value) and length(value) == 64
+  defguard is_hash(value) when is_binary(value) and byte_size(value) == 64
 
   defguard is_ledger_index_shortcut(value) when value in ~w(current closed validated)
 

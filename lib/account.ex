@@ -127,14 +127,14 @@ defmodule XRPL.Account do
   def account_tx(account, index_min \\ -1, index_max \\ -1, opts \\ []) do
     opts =
       Keyword.validate!(opts, [
-        index_min: index_min,
-        index_max: index_max,
         :ledger_hash,
         :ledger_index,
         :limit,
         :marker,
         binary: false,
-        forward: false
+        forward: false,
+        index_min: index_min,
+        index_max: index_max
       ])
 
     xrpl("account_tx", Map.merge(%{account: account}, Map.new(opts)))
@@ -164,11 +164,11 @@ defmodule XRPL.Account do
   Ref: https://xrpl.org/noripple_check.html
   """
   def noripple_check(account, role \\ "user", opts \\ []) do
-    opts = Keyword.validate!(opts,[transactions: false, limit: 300, :ledger_hash, :ledger_index])
+    opts = Keyword.validate!(opts, [:ledger_hash, :ledger_index, transactions: false, limit: 300])
 
     xrpl("noripple_check", Map.merge(%{account: account, role: role}, Map.new(opts)))
   end
 
   def noripple_check!(account, role \\ "user", opts \\ []),
-    do: unwrap_or_raise(noripple_check(account, role, limit))
+    do: unwrap_or_raise(noripple_check(account, role, opts))
 end
