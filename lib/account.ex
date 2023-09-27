@@ -2,7 +2,7 @@ defmodule XRPL.Account do
   @moduledoc """
   XRPL.Account is a module to interact with accounts on the XRP Ledger.
 
-  It follows https://xrpl.org/account-methods.html
+  Official RPC documentations https://xrpl.org/account-methods.html
   """
 
   use Tesla
