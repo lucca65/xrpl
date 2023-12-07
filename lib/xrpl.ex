@@ -6,8 +6,8 @@ defmodule XRPL do
   use Tesla
 
   plug(Tesla.Middleware.BaseUrl, Application.get_env(:xrpl, :devnet))
-  plug(Tesla.Middleware.JSON)
   plug(XRPL.Middleware.Error)
+  plug(Tesla.Middleware.JSON)
 
   defmacro unwrap_or_raise(call) do
     quote do

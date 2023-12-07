@@ -7,7 +7,7 @@ defmodule Xrpl.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      description: "XRPL client for Elixir",
+      description: "XRPL HTTP client for Elixir",
       package: package(),
       deps: deps(),
       docs: [
@@ -32,6 +32,7 @@ defmodule Xrpl.MixProject do
       {:jason, ">= 1.0.0"},
 
       # Dev
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
   end
@@ -41,7 +42,8 @@ defmodule Xrpl.MixProject do
       name: "xrpl",
       files: ~w(lib mix.exs README.md LICENSE),
       licenses: ["AGPL-3.0-or-later"],
-      maintainers: ["Julien Lucca"]
+      maintainers: ["Julien Lucca"],
+      links: %{"Github" => "https://github.com/lucca65/xrpl"}
     ]
   end
 end

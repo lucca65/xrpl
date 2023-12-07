@@ -18,18 +18,27 @@ defmodule XRPL.Middleware.Error do
   def call(env, next, _options) do
     env
     |> Tesla.run(next)
-    |> case do
-      {:ok, env} ->
-        case env.status do
-          s when s in [200, 201, 202, 203, 204] ->
-            {:ok, env}
+    |> check_status()
+    |> check_body()
+  end
 
-          _ ->
-            {:error, env}
-        end
+  def check_status({:ok, env}) do
+    case env.status do
+      s when s in [200, 201, 202, 203, 204] ->
+        {:ok, env}
 
-      env ->
-        env
+      _ ->
+        {:error, env}
+    end
+  end
+
+  def check_body({:error, error}), do: {:error, error}
+
+  def check_body({:ok, env}) do
+    if Map.has_key?(env.body["result"], "error") do
+      {:error, env}
+    else
+      {:ok, env}
     end
   end
 end
