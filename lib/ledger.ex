@@ -36,9 +36,11 @@ defmodule XRPL.Ledger do
       ])
 
     # Validate ledger type
-    Enum.any?(@ledger_type, &(&1 == Keyword.get(opts, :type))) || raise("Invalid ledger index")
-
-    xrpl("ledger", Map.new(opts))
+    if Enum.member?(@ledger_type, Keyword.get(opts, :type)) do
+      xrpl("ledger", Map.new(opts))
+    else
+      {:error, "Invalid ledger type"}
+    end
   end
 
   def ledger!(opts \\ []), do: unwrap_or_raise(ledger(opts))
@@ -91,11 +93,11 @@ defmodule XRPL.Ledger do
       ])
 
     # Check if sent type is valid
-    if Keyword.get(opts, :type) and Enum.any?(@ledger_type, &(&1 == Keyword.get(opts, :type))) do
-      raise("Invalid ledger index")
+    if Keyword.has_key?(opts, :type) and not Enum.member?(@ledger_type, Keyword.get(opts, :type)) do
+      {:error, "Invalid ledger type"}
+    else
+      xrpl("ledger_data", Map.new(opts))
     end
-
-    xrpl("ledger_data", Map.new(opts))
   end
 
   def ledger_data!(opts \\ []), do: unwrap_or_raise(ledger_data(opts))

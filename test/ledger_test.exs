@@ -5,18 +5,49 @@ defmodule XRPLTest.LedgerTest do
 
   describe "ledger/2" do
     test "returns ledger info for a given index" do
-      assert({:ok, %Tesla.Env{} = env} = Ledger.ledger(ledger_index: 12_345))
+      assert({:ok, %Tesla.Env{} = env} = Ledger.ledger(ledger_index: 731_096))
 
       assert env.status == 200
-      assert env.body["result"]["ledger_index"] == 12_345
+      assert env.body["result"]["ledger_index"] == 731_096
     end
 
     test "returns error for invalid index" do
       assert {:error, %Tesla.Env{} = env} = Ledger.ledger(ledger_index: "invalid_index")
-
       assert(env.status == 200)
-
       assert env.body["result"]["error"] == "invalidParams"
+    end
+  end
+
+  describe "ledger_closed/0" do
+    test "returns ledger info for the latest closed index" do
+      assert {:ok, %Tesla.Env{} = env} = Ledger.ledger_closed()
+      assert env.body["result"]["status"] == "success"
+    end
+  end
+
+  describe "ledger_current/0" do
+    test "returns current in-progress index" do
+      assert {:ok, %Tesla.Env{} = env} = Ledger.ledger_current()
+      assert env.body["result"]["status"] == "success"
+    end
+  end
+
+  describe "ledger_data/1" do
+    test "returns contents for a given ledger index" do
+      assert {:ok, %Tesla.Env{} = env} = Ledger.ledger_data(ledger_index: 731_096)
+      assert env.body["result"]["status"] == "success"
+    end
+
+    test "uses type to filter results" do
+      assert {:ok, %Tesla.Env{} = env} =
+               Ledger.ledger_data(ledger_index: 731_096, type: "account")
+
+      assert env.body["result"]["status"] == "success"
+    end
+
+    test "invalid type return error" do
+      assert {:error, "Invalid ledger type"} =
+               Ledger.ledger_data(ledger_index: 731_096, type: "invalid_type")
     end
   end
 end
