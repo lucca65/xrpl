@@ -36,6 +36,7 @@ defmodule XRPL do
   """
   defguard is_ledger_index(value)
            when is_hash(value) or
+                  is_binary(value) or
                   is_integer(value) or
                   is_ledger_index_shortcut(value)
 

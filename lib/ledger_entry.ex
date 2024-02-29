@@ -36,39 +36,34 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
-  def ledger_entry(:amm, ledger_index, asset) when is_binary(asset) do
+  def amm(ledger_index, asset, asset2, asset2_issuer)
+      when is_binary(asset) and is_binary(asset2) do
     post("/", %{
       method: "ledger_entry",
       params: [
         %{
-          amm: %{asset: asset},
+          amm: %{
+            asset: %{currency: asset},
+            asset2: %{currency: asset2, issuer: asset2_issuer}
+          },
           ledger_index: ledger_index
         }
       ]
     })
   end
 
-  def ledger_entry(:amm, ledger_index, %{asset: asset, asset2: asset2}) do
-    post("/", %{
-      method: "ledger_entry",
-      amm: %{
-        asset: asset,
-        asset2: asset2
-      },
-      ledger_index: ledger_index
-    })
-  end
-
-  def ledger_entry(:directory_node, ledger_index, directory) when is_binary(directory) do
+  def directory_node(ledger_index, directory) when is_binary(directory) do
     post("/", %{
       method: "ledger_entry",
       params: [%{directory: directory, ledger_index: ledger_index}]
     })
   end
 
-  def ledger_entry(:directory_node, ledger_index, opts) do
+  def directory_node(ledger_index, opts) do
     opts =
-      Keyword.filter(opts, &Enum.any?([:subindex, :dir_root, :owner], &1))
+      Keyword.filter(opts, fn {key, _val} ->
+        Enum.any?([:sub_index, :dir_root, :owner], &(key == &1))
+      end)
 
     post("/", %{
       method: "ledger_entry",
@@ -76,14 +71,14 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
-  def ledger_entry(:offer, ledger_index, offer) when is_binary(offer) do
+  def offer(ledger_index, offer) when is_binary(offer) do
     post("/", %{
       method: "ledger_entry",
       params: [%{offer: offer, ledger_index: ledger_index}]
     })
   end
 
-  def ledger_entry(:offer, ledger_index, account, seq) do
+  def offer(ledger_index, account, seq) do
     post("/", %{
       method: "ledger_entry",
       params: [%{offer: %{account: account, seq: seq}, ledger_index: ledger_index}]
