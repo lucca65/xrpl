@@ -4,7 +4,7 @@ defmodule XRPLTest.AccountTest do
   alias XRPL.Account
   alias XRPL.Account, as: Account
 
-  @account "rh1HPuRVsYYvThxG2Bs1MfjmrVC73S16Fb"
+  @account "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn"
   @destination_account "r9Co1BjUUGcZSxdQ7Zie8dTkXxhs4QhHjo"
 
   describe "account_info/1" do

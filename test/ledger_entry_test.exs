@@ -23,7 +23,7 @@ defmodule XRPLTest.LedgerEntryTest do
     test "returns account root for a given index" do
       assert(
         {:ok, %Tesla.Env{} = env} =
-          LedgerEntry.account_root("rheRQ63CzckoqrV1nDZG7fYDjMjGHUH7SF", "validated")
+          LedgerEntry.account_root("rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn", "validated")
       )
 
       assert env.status == 200
@@ -37,8 +37,8 @@ defmodule XRPLTest.LedgerEntryTest do
           LedgerEntry.amm(
             "validated",
             "XRP",
-            "FMM",
-            "rMuA7vLhXgZDSkC2AfeUu52rm18yAmcfme"
+            "TST",
+            "rP9jPyP5kyvFRb6ZiRghAGw5u8SGAmU4bd"
           )
       )
 
@@ -47,20 +47,11 @@ defmodule XRPLTest.LedgerEntryTest do
   end
 
   describe "directory_node/2" do
-    test "search by directory using string object ID" do
-      assert(
-        {:ok, %Tesla.Env{} = env} =
-          LedgerEntry.directory_node("validated", "rMuA7vLhXgZDSkC2AfeUu52rm18yAmcfme")
-      )
-
-      assert env.status == 200
-    end
-
     test "search using directory object with optional fields" do
       assert(
         {:ok, %Tesla.Env{} = env} =
           LedgerEntry.directory_node("validated",
-            owner: "rMuA7vLhXgZDSkC2AfeUu52rm18yAmcfme",
+            owner: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
             sub_index: 0
           )
       )
@@ -70,19 +61,10 @@ defmodule XRPLTest.LedgerEntryTest do
   end
 
   describe "offer/2" do
-    test "returns offer by sending an ledger entry ID" do
-      assert(
-        {:ok, %Tesla.Env{} = env} =
-          LedgerEntry.offer("validated", "rMuA7vLhXgZDSkC2AfeUu52rm18yAmcfme")
-      )
-
-      assert env.status == 200
-    end
-
     test "returns offer by sending offer object" do
       assert(
         {:ok, %Tesla.Env{} = env} =
-          LedgerEntry.offer("validated", "rMuA7vLhXgZDSkC2AfeUu52rm18yAmcfme", 3)
+          LedgerEntry.offer("validated", "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn", 359)
       )
 
       assert env.status == 200

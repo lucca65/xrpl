@@ -5,7 +5,7 @@ defmodule XRPL do
 
   use Tesla
 
-  plug(Tesla.Middleware.BaseUrl, Application.get_env(:xrpl, :devnet))
+  plug(Tesla.Middleware.BaseUrl, Application.get_env(:xrpl, :mainnet))
   plug(XRPL.Middleware.Error)
   plug(Tesla.Middleware.JSON)
 

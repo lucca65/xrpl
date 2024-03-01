@@ -52,13 +52,6 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
-  def directory_node(ledger_index, directory) when is_binary(directory) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{directory: directory, ledger_index: ledger_index}]
-    })
-  end
-
   def directory_node(ledger_index, opts) do
     opts =
       Keyword.filter(opts, fn {key, _val} ->
@@ -68,13 +61,6 @@ defmodule XRPL.LedgerEntry do
     post("/", %{
       method: "ledger_entry",
       params: [%{ledger_index: ledger_index, directory: Map.new(opts)}]
-    })
-  end
-
-  def offer(ledger_index, offer) when is_binary(offer) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{offer: offer, ledger_index: ledger_index}]
     })
   end
 
