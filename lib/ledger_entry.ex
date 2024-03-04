@@ -23,6 +23,11 @@ defmodule XRPL.LedgerEntry do
 
   def by_id!(ledger_index, index), do: unwrap_or_raise(by_id(ledger_index, index))
 
+  @doc """
+  Retrieve an AccountRoot entry by its address. This is roughly equivalent to the account_info method.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-accountroot-object
+  """
   @spec account_root(integer | String.t(), String.t()) :: Tesla.Env.result()
   def account_root(ledger_index, account_root) do
     post("/", %{
@@ -36,6 +41,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve an Automated Market-Maker (AMM) object from the ledger. This is similar to amm_info method, but the ledger_entry version returns only the ledger entry as stored.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-amm-object
+  """
   def amm(ledger_index, object_id) when is_binary(object_id) do
     post("/", %{
       method: "ledger_entry",
@@ -58,6 +68,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a DirectoryNode, which contains a list of other ledger objects. Can be provided as string (object ID of the Directory) or as an object.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-directorynode-object
+  """
   def directory_node(ledger_index, opts) do
     opts =
       Keyword.filter(opts, fn {key, _val} ->
@@ -70,6 +85,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve an Offer entry, which defines an offer to exchange currency. Can be provided as string (unique index of the Offer) or as an object.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-offer-object
+  """
   def offer(ledger_index, account, seq) do
     post("/", %{
       method: "ledger_entry",
@@ -77,6 +97,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a RippleState entry, which tracks a (non-XRP) currency balance between two accounts.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-ripplestate-object
+  """
   def ripple_state(ledger_index, accounts, currency) do
     post("/", %{
       method: "ledger_entry",
@@ -86,6 +111,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a Check entry, which is a potential payment that can be cashed by its recipient.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-check-object
+  """
   def check(ledger_index, object_id) do
     post("/", %{
       method: "ledger_entry",
@@ -93,6 +123,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve an Escrow entry, which holds XRP until a specific time or condition is met. Can be provided as string (object ID of the Escrow) or as an object.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-escrow-object
+  """
   def escrow(ledger_index, object_id) do
     post("/", %{
       method: "ledger_entry",
@@ -107,6 +142,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a PayChannel entry, which holds XRP for asynchronous payments.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-paychannel-object
+  """
   def payment_channel(ledger_index, object_id) do
     post("/", %{
       method: "ledger_entry",
@@ -114,6 +154,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a DepositPreauth entry, which tracks preauthorization for payments to accounts requiring Deposit Authorization.
+
+  Official documentation:
+  """
   def deposit_preauth(ledger_index, object_id) do
     post("/", %{
       method: "ledger_entry",
@@ -128,6 +173,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Retrieve a Ticket entry, which represents a sequence number set aside for future use. (Added by the TicketBatch amendment)
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-ticket-object
+  """
   def ticket(ledger_index, ledger_entry_id) do
     post("/", %{
       method: "ledger_entry",
@@ -142,6 +192,11 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
+  @doc """
+  Return an NFT Page in its raw ledger format.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/ledger-methods/ledger_entry/#get-nft-page
+  """
   def nft_page(ledger_index, ledger_entry_id) do
     post("/", %{
       method: "ledger_entry",

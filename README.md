@@ -10,7 +10,7 @@ It allows you to interact with its HTTP API and is organized in a manner similar
 This is currently a work in progress and there is still a lot to do. Any help is welcome!
 
 - [x] Account methods
-- [ ] Ledger methods
+- [x] Ledger methods
 - [ ] Transaction methods
 - [ ] Path and Order Book methods
 - [ ] Payment methods

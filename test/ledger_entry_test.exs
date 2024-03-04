@@ -1,4 +1,4 @@
-defmodule XRPLTest.LedgerEntryTest do
+defmodule XRPL.LedgerEntryTest do
   use ExUnit.Case
 
   alias XRPL.LedgerEntry

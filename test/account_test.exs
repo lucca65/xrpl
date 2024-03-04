@@ -1,4 +1,4 @@
-defmodule XRPLTest.AccountTest do
+defmodule XRPL.AccountTest do
   use ExUnit.Case
 
   alias XRPL.Account
