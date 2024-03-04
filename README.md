@@ -11,8 +11,8 @@ This is currently a work in progress and there is still a lot to do. Any help is
 
 - [x] Account methods
 - [x] Ledger methods
-- [ ] Transaction methods
-- [ ] Path and Order Book methods
+- [x] Transaction methods
+- [x] Path and Order Book methods
 - [ ] Payment methods
 - [ ] Server methods
 - [ ] Clio methods
