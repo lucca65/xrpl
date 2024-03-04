@@ -13,7 +13,7 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-ledger-object-by-id
   """
-  # @spec by_id(integer | String.t(), String.t()) :: Tesla.Env.result()
+  @spec by_id(integer | String.t(), String.t()) :: Tesla.Env.result()
   def by_id(ledger_index, index) when is_ledger_index(index) do
     post("/", %{
       method: "ledger_entry",
@@ -23,8 +23,8 @@ defmodule XRPL.LedgerEntry do
 
   def by_id!(ledger_index, index), do: unwrap_or_raise(by_id(ledger_index, index))
 
-  @spec account_root(integer | String.t(), Keyword.t()) :: Tesla.Env.result()
-  def account_root(account_root, ledger_index) do
+  @spec account_root(integer | String.t(), String.t()) :: Tesla.Env.result()
+  def account_root(ledger_index, account_root) do
     post("/", %{
       method: "ledger_entry",
       params: [
@@ -33,6 +33,13 @@ defmodule XRPL.LedgerEntry do
           ledger_index: ledger_index
         }
       ]
+    })
+  end
+
+  def amm(ledger_index, object_id) when is_binary(object_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{amm: object_id, ledger_index: ledger_index}]
     })
   end
 

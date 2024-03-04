@@ -23,7 +23,7 @@ defmodule XRPLTest.LedgerEntryTest do
     test "returns account root for a given index" do
       assert(
         {:ok, %Tesla.Env{} = env} =
-          LedgerEntry.account_root("rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn", "validated")
+          LedgerEntry.account_root("validated", "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn")
       )
 
       assert env.status == 200
@@ -31,14 +31,30 @@ defmodule XRPLTest.LedgerEntryTest do
   end
 
   describe "amm/3" do
+    # As of march 3rd, AMM is not enabled in the mainnet
+    @tag :skip
+    test "returns ledger entry by using object ID" do
+      assert(
+        {:ok, %Tesla.Env{} = env} =
+          LedgerEntry.amm(
+            "current",
+            "C525F9E300010000"
+          )
+      )
+
+      assert env.status == 200
+    end
+
+    # As of march 3rd, AMM is not enabled in the mainnet
+    @tag :skip
     test "returns ledger entry for a given index" do
       assert(
         {:ok, %Tesla.Env{} = env} =
           LedgerEntry.amm(
-            "validated",
+            "current",
             "XRP",
-            "TST",
-            "rP9jPyP5kyvFRb6ZiRghAGw5u8SGAmU4bd"
+            "FOO",
+            "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
           )
       )
 
