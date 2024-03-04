@@ -77,6 +77,75 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
-  # def ledger_entry(:ripple_state, ledger_index, accounts, currency) do
-  # end
+  def ripple_state(ledger_index, accounts, currency) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [
+        %{ripple_state: %{accounts: accounts, currency: currency}, ledger_index: ledger_index}
+      ]
+    })
+  end
+
+  def check(ledger_index, object_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{check: object_id, ledger_index: ledger_index}]
+    })
+  end
+
+  def escrow(ledger_index, object_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{escrow: object_id, ledger_index: ledger_index}]
+    })
+  end
+
+  def escrow(ledger_index, owner, seq) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{escrow: %{owner: owner, seq: seq}, ledger_index: ledger_index}]
+    })
+  end
+
+  def payment_channel(ledger_index, object_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{payment_channel: object_id, ledger_index: ledger_index}]
+    })
+  end
+
+  def deposit_preauth(ledger_index, object_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{deposit_preauth: object_id, ledger_index: ledger_index}]
+    })
+  end
+
+  def deposit_preauth(ledger_index, owner, authorized) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{deposit_preauth: %{owner: owner, authorized: authorized}, ledger_index: ledger_index}]
+    })
+  end
+
+  def ticket(ledger_index, ledger_entry_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{ticket: ledger_entry_id, ledger_index: ledger_index}]
+    })
+  end
+
+  def ticket(ledger_index, account, seq) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{ticket: %{account: account, ticket_seq: seq}, ledger_index: ledger_index}]
+    })
+  end
+
+  def nft_page(ledger_index, ledger_entry_id) do
+    post("/", %{
+      method: "ledger_entry",
+      params: [%{nft_page: ledger_entry_id, ledger_index: ledger_index}]
+    })
+  end
 end
