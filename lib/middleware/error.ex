@@ -1,6 +1,4 @@
 defmodule XRPL.Middleware.Error do
-  @behaviour Tesla.Middleware
-
   @moduledoc """
   Makes requests that don't respond to HTTP Success codes to return as a error
 
@@ -14,6 +12,8 @@ defmodule XRPL.Middleware.Error do
   end
   ```
   """
+
+  @behaviour Tesla.Middleware
 
   def call(env, next, _options) do
     env

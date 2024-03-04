@@ -2,6 +2,7 @@ defmodule XRPL.Middleware.ErrorTest do
   use ExUnit.Case, async: false
 
   defmodule VanillaClient do
+    @moduledoc false
     use Tesla
 
     adapter(fn env ->
@@ -19,6 +20,7 @@ defmodule XRPL.Middleware.ErrorTest do
   end
 
   defmodule CustomClient do
+    @moduledoc false
     use Tesla
 
     plug(XRPL.Middleware.Error)

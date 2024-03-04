@@ -34,5 +34,9 @@ jobs:
           restore-keys: ${{ runner.os }}-mix-
       - name: Install dependencies
         run: mix deps.get
+
       - name: Run tests
-        run: mix test
+        run: mix test --exclude skip
+
+      - name: Check code quality
+        run: mix format --check-formatted && mix credo --strict

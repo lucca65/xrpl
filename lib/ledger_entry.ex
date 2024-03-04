@@ -43,8 +43,7 @@ defmodule XRPL.LedgerEntry do
     })
   end
 
-  def amm(ledger_index, asset, asset2, asset2_issuer)
-      when is_binary(asset) and is_binary(asset2) do
+  def amm(ledger_index, asset, asset2, asset2_issuer) when is_binary(asset) and is_binary(asset2) do
     post("/", %{
       method: "ledger_entry",
       params: [

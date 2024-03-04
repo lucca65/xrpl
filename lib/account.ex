@@ -24,8 +24,7 @@ defmodule XRPL.Account do
     })
   end
 
-  def account_channels!(account, destination_account),
-    do: unwrap_or_raise(account_channels(account, destination_account))
+  def account_channels!(account, destination_account), do: unwrap_or_raise(account_channels(account, destination_account))
 
   @doc """
   The account_currencies command retrieves a list of currencies that an account can send or receive, based on its trust lines
@@ -102,8 +101,7 @@ defmodule XRPL.Account do
     xrpl("account_objects", Map.merge(%{account: account}, Map.new(opts)))
   end
 
-  def account_objects!(account, opts),
-    do: unwrap_or_raise(account_objects(account, opts))
+  def account_objects!(account, opts), do: unwrap_or_raise(account_objects(account, opts))
 
   @doc """
   The account_offers method retrieves a list of offers made by a given account that are outstanding as of a particular ledger version.
@@ -155,8 +153,7 @@ defmodule XRPL.Account do
     xrpl("gateway_balances", Map.merge(%{account: account}, Map.new(opts)))
   end
 
-  def gateway_balance!(account, opts \\ []),
-    do: unwrap_or_raise(gateway_balance(account, opts))
+  def gateway_balance!(account, opts \\ []), do: unwrap_or_raise(gateway_balance(account, opts))
 
   @doc """
   The noripple_check command provides a quick way to check the status of the Default Ripple field for an account and the No Ripple flag of its trust lines, compared with the recommended settings.
@@ -169,6 +166,5 @@ defmodule XRPL.Account do
     xrpl("noripple_check", Map.merge(%{account: account, role: role}, Map.new(opts)))
   end
 
-  def noripple_check!(account, role \\ "user", opts \\ []),
-    do: unwrap_or_raise(noripple_check(account, role, opts))
+  def noripple_check!(account, role \\ "user", opts \\ []), do: unwrap_or_raise(noripple_check(account, role, opts))
 end

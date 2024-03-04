@@ -1,4 +1,5 @@
 defmodule XRPL.Error do
+  @moduledoc false
   require Logger
 
   defexception [:reason, :url]

@@ -9,6 +9,7 @@ defmodule Xrpl.MixProject do
       start_permanent: Mix.env() == :prod,
       description: "XRPL HTTP client for Elixir",
       package: package(),
+      aliases: aliases(),
       deps: deps(),
       docs: [
         main: "readme",
@@ -33,11 +34,15 @@ defmodule Xrpl.MixProject do
 
       # Dev
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7.5", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.12", only: [:dev, :test], runtime: false},
+      {:styler, "~> 0.11", only: [:dev, :test], runtime: false}
     ]
   end
 
-  defp package() do
+  defp aliases, do: [quality: ["format --check-formatted", "sobelow --config", "credo --strict"]]
+
+  defp package do
     [
       name: "xrpl",
       files: ~w(lib mix.exs README.md LICENSE),

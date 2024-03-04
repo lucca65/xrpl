@@ -52,11 +52,11 @@ defmodule XRPL.Ledger do
   Official documentation: https://xrpl.org/ledger_closed.html
   """
   @spec ledger_closed() :: Tesla.Env.result()
-  def ledger_closed() do
+  def ledger_closed do
     xrpl("ledger_closed", %{})
   end
 
-  def ledger_closed!(), do: unwrap_or_raise(ledger_closed())
+  def ledger_closed!, do: unwrap_or_raise(ledger_closed())
 
   @doc """
   The ledger_current method returns the unique identifiers of the current in-progress ledger.
@@ -66,11 +66,11 @@ defmodule XRPL.Ledger do
   Official documentation: https://xrpl.org/ledger_current.html
   """
   @spec ledger_current() :: Tesla.Env.result()
-  def ledger_current() do
+  def ledger_current do
     xrpl("ledger_current", %{})
   end
 
-  def ledger_current!(), do: unwrap_or_raise(ledger_current())
+  def ledger_current!, do: unwrap_or_raise(ledger_current())
 
   @doc """
   The ledger_data method retrieves contents of the specified ledger.
