@@ -7,4 +7,20 @@ defmodule XRPL.Payment do
 
   Official documentation: https://xrpl.org/payment-channel-methods.html
   """
+
+  import XRPL
+
+  def channel_verify(amount, channel_id, signature, public_key) do
+    post("/", %{
+      method: "channel_verify",
+      params: [
+        %{
+          amount: amount,
+          channel_id: channel_id,
+          signature: signature,
+          public_key: public_key
+        }
+      ]
+    })
+  end
 end
