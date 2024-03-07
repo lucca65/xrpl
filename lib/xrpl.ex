@@ -24,6 +24,16 @@ defmodule XRPL do
             {:error, changeset}
         end
       end
+
+      def xrpl(method, validator, params) do
+        case validate(validator, params) do
+          {:ok, attrs} ->
+            post("/", %{method: method, params: [attrs]})
+
+          {:error, %Ecto.Changeset{errors: error} = changeset} ->
+            {:error, changeset}
+        end
+      end
     end
   end
 
@@ -74,9 +84,21 @@ defmodule XRPL do
 
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/basic-data-types/#addresses
   """
-  def account_address_regex do
-    ~r/^r[1-9a-np-zA-NP-Z]{24,34}$/
-  end
+  def account_address_regex, do: ~r/^r[1-9a-np-zA-NP-Z]{24,34}$/
+
+  @doc """
+  Each ledger entry has a unique ID. The ID is derived by hashing important contents of the entry, along with a namespace identifier. The ledger entry type determines the namespace identifier to use and which contents to include in the hash. This ensures every ID is unique. The hash function is SHA-512Half.
+
+  Generally, a ledger entry's ID is returned as the index field in JSON, at the same level as the object's contents. In transaction metadata, the ledger object's ID in JSON is LedgerIndex.
+
+  Offer directories have special IDs, where part of the hash is replaced with the exchange rate of Offers in that directory.
+
+
+  Official documentation: https://xrpl.org/docs/references/protocol/ledger-data/common-fields/
+  """
+  def ledger_entry_regex, do: ~r/^[a-fA-F0-9]{64}$/
+
+  def ledger_hash_regex, do: ledger_entry_regex()
 
   @doc """
   A ledger index is a 32-bit unsigned integer used to identify a ledger. The ledger index is sometimes known as the ledger's sequence number. (This is different from an account sequence.) The very first ledger was ledger index 1, and each new ledger has a ledger index that is 1 higher than the ledger index of the ledger immediately before it.
@@ -119,7 +141,5 @@ defmodule XRPL do
   Reporting Mode does not record ledger data until it has been validated. If you make a request to a Reporting Mode server for the current or closed ledger, the server forwards the request to a P2P Mode server. If you request a ledger index or hash that is not validated, a Reporting Mode server responds with a lgrNotFound error.
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/basic-data-types/#ledger-index
   """
-  def ledger_index_regex do
-    ~r/^(\d+|current|closed|validated)$/
-  end
+  def ledger_index_regex, do: ~r/^(\d+|current|closed|validated)$/
 end
