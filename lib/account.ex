@@ -128,7 +128,18 @@ defmodule XRPL.Account do
     optional(:marker, :string)
 
     optional(:type, :enum,
-      values: ~w[check deposit_preauth escrow nft_offer nft_page offer payment_channel signer_list state ticket]
+      values: [
+        "check",
+        "deposit_preauth",
+        "escrow",
+        "nft_offer",
+        "nft_page",
+        "offer",
+        "payment_channel",
+        "signer_list",
+        "state",
+        "ticket"
+      ]
     )
   end
 
@@ -165,7 +176,52 @@ defmodule XRPL.Account do
   defparams "account_tx" do
     required(:account, :string, format: XRPL.account_address_regex())
 
-    optional(:tx_type, :enum, values: XRPL.transaction_types())
+    optional(:tx_type, :enum,
+      values: [
+        "AccountSet",
+        "AccountDelete",
+        "AMMBid",
+        "AMMCreate",
+        "AMMDelete",
+        "AMMDeposit",
+        "AMMVote",
+        "AMMWithdraw",
+        "CheckCancel",
+        "CheckCash",
+        "CheckCreate",
+        "Clawback",
+        "DepositPreauth",
+        "DIDDelete",
+        "DIDSet",
+        "EscrowCancel",
+        "EscrowCreate",
+        "EscrowFinish",
+        "NFTokenAcceptOffer",
+        "NFTokenBurn",
+        "NFTokenCancelOffer",
+        "NFTokenCreateOffer",
+        "NFTokenMint",
+        "OfferCancel",
+        "OfferCreate",
+        "Payment",
+        "PaymentChannelClaim",
+        "PaymentChannelCreate",
+        "PaymentChannelFund",
+        "SetRegularKey",
+        "SignerListSet",
+        "TicketCreate",
+        "TrustSet",
+        "XChainAccountCreateCommit",
+        "XChainAddAccountCreateAttestation",
+        "XChainAddClaimAttestation",
+        "XChainClaim",
+        "XChainCommit",
+        "XChainCreateBridge",
+        "XChainCreateClaimID",
+        "XChainModifyBridge"
+      ]
+    )
+
     optional(:ledger_index_min, :integer)
     optional(:ledger_index_max, :integer)
     optional(:ledger_hash, :string, format: XRPL.is_hash())

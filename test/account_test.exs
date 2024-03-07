@@ -100,7 +100,7 @@ defmodule XRPL.AccountTest do
   describe "account_objects/1" do
     test "returns information about an account's objects" do
       assert {:ok, %Tesla.Env{status: 200}} =
-               Account.account_objects(@account)
+               Account.account_objects(%{account: @account})
     end
 
     test "it returns an error if we don't provide the required param" do

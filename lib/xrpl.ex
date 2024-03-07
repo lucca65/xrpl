@@ -122,8 +122,4 @@ defmodule XRPL do
   def ledger_index_regex do
     ~r/^(\d+|current|closed|validated)$/
   end
-
-  def transaction_types do
-    ~w(AccountSet AccountDelete AMMBid AMMCreate AMMDelete AMMDeposit AMMVote AMMWithdraw CheckCancel CheckCash CheckCreate Clawback DepositPreauth DIDDelete DIDSet EscrowCancel EscrowCreate EscrowFinish NFTokenAcceptOffer NFTokenBurn NFTokenCancelOffer NFTokenCreateOffer NFTokenMint OfferCancel OfferCreate Payment PaymentChannelClaim PaymentChannelCreate PaymentChannelFund SetRegularKey SignerListSet TicketCreate TrustSet XChainAccountCreateCommit XChainAddAccountCreateAttestation XChainAddClaimAttestation XChainClaim XChainCommit XChainCreateBridge XChainCreateClaimID XChainModifyBridge)
-  end
 end
