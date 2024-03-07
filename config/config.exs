@@ -8,4 +8,4 @@ config :xrpl,
   testnet: "https://s.altnet.rippletest.net:51234/",
   devnet: "https://s.devnet.rippletest.net:51234/"
 
-config :logger, :console, format: "[$level] $message\n", metadata: [:request_id, :url]
+config :logger, :console, level: :warning, format: "[$level] $message\n", metadata: [:request_id, :url, :body, :details]

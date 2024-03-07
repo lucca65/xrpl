@@ -7,7 +7,7 @@ defmodule XRPL.Ledger do
   Official RPC documentation: https://xrpl.org/ledger-methods.html
   """
 
-  import XRPL
+  use XRPL
 
   @ledger_type ~w(account amendments amm check deposit_preauth directory escrow fee hashes nft_offer offer payment_channel signer_list state ticket)
 
@@ -44,6 +44,9 @@ defmodule XRPL.Ledger do
   end
 
   def ledger!(opts \\ []), do: unwrap_or_raise(ledger(opts))
+
+  defparams "ledger" do
+  end
 
   @doc """
   The ledger_closed method returns the unique identifiers of the most recently closed ledger.

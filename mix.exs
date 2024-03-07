@@ -28,9 +28,13 @@ defmodule Xrpl.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      # Core
       {:tesla, "~> 1.7"},
       {:hackney, "~> 1.17"},
       {:jason, ">= 1.0.0"},
+
+      # Validation
+      {:goal, "~> 0.2"},
 
       # Dev
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},

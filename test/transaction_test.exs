@@ -11,10 +11,6 @@ defmodule XRPL.TransactionTest do
                )
 
       assert env.method == :post
-
-      # TODO: Transactions cost money to test. Use ExVCR to mock the response
-      # https://github.com/parroty/exvcr
-      # Or TeslaMock
     end
   end
 
