@@ -39,7 +39,7 @@ defmodule XRPL.LedgerEntry do
   def account_root!(params), do: params |> account_root() |> unwrap_or_raise()
 
   defparams "account_root" do
-    required(:account_root, :string, format: XRPL.is_account())
+    required(:account_root, :string, format: XRPL.account_address_regex())
 
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
@@ -51,14 +51,35 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-amm-object
   """
-  def amm(params) do
-    xrpl("ledger_entry", "amm", params)
+  def amm(%{amm: amm} = params) when is_map(amm) do
+    xrpl("ledger_entry", "amm_map", params)
+  end
+
+  def amm(%{amm: amm} = params) when is_binary(amm) do
+    xrpl("ledger_entry", "amm_object", params)
   end
 
   def amm!(params), do: params |> amm() |> unwrap_or_raise()
 
-  defparams "amm" do
-    # TODO: finish this
+  defparams "amm_string" do
+    required(:amm, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "amm_object" do
+    required :amm, :map do
+      required :asset, :map do
+        required(:currency, :string, format: XRPL.currency_regex())
+      end
+
+      required :asset2, :map do
+        required(:currency, :string, format: XRPL.currency_regex())
+        required(:issuer, :string, format: XRPL.account_address_regex())
+      end
+    end
 
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
@@ -70,16 +91,34 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-directorynode-object
   """
-  def directory_node(ledger_index, opts) do
-    opts =
-      Keyword.filter(opts, fn {key, _val} ->
-        Enum.any?([:sub_index, :dir_root, :owner], &(key == &1))
-      end)
+  def directory_node(%{directory: directory} = params) when is_binary(directory) do
+    xrpl("ledger_entry", "directory_node_string", params)
+  end
 
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{ledger_index: ledger_index, directory: Map.new(opts)}]
-    })
+  def directory_node(%{directory: directory} = params) when is_map(directory) do
+    xrpl("ledger_entry", "directory_node_object", params)
+  end
+
+  def directory_node!(params), do: params |> directory_node() |> unwrap_or_raise()
+
+  defparams "directory_node_string" do
+    required(:directory, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "directory_node_object" do
+    required :directory, :map do
+      optional(:dir_root, :string, format: XRPL.ledger_entry_regex())
+      optional(:owner, :string, format: XRPL.account_address_regex())
+      optional(:sub_index, :integer)
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -87,11 +126,32 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-offer-object
   """
-  def offer(ledger_index, account, seq) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{offer: %{account: account, seq: seq}, ledger_index: ledger_index}]
-    })
+  def offer(%{offer: offer} = params) when is_binary(offer) do
+    xrpl("ledger_entry", "offer_string", params)
+  end
+
+  def offer(%{offer: offer} = params) when is_map(offer) do
+    xrpl("ledger_entry", "offer_object", params)
+  end
+
+  def offer!(params), do: params |> offer() |> unwrap_or_raise()
+
+  defparams "offer_string" do
+    required(:offer, :string, format: XRPL.ledger_entry_regex())
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "offer_object" do
+    required :offer, :map do
+      required(:account, :string, format: XRPL.account_address_regex())
+      required(:seq, :integer)
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -99,13 +159,21 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-ripplestate-object
   """
-  def ripple_state(ledger_index, accounts, currency) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [
-        %{ripple_state: %{accounts: accounts, currency: currency}, ledger_index: ledger_index}
-      ]
-    })
+  def ripple_state(params) do
+    xrpl("ledger_entry", "ripple_state", params)
+  end
+
+  def ripple_state!(params), do: params |> ripple_state() |> unwrap_or_raise()
+
+  defparams "ripple_state" do
+    required(:ripple_state, :map) do
+      required(:accounts, :list, of: :string, format: XRPL.account_address_regex())
+      required(:currency, :string, format: XRPL.currency_regex())
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -113,11 +181,18 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-check-object
   """
-  def check(ledger_index, object_id) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{check: object_id, ledger_index: ledger_index}]
-    })
+  def check(params) do
+    xrpl("ledger_entry", "check", params)
+  end
+
+  def check!(params), do: params |> check() |> unwrap_or_raise()
+
+  defparams "check" do
+    required(:check, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -125,22 +200,52 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html/#get-escrow-object
   """
-  def escrow(params) do
-    xrpl("ledger_entry", "escrow", params)
+  def escrow(%{escrow: escrow} = params) when is_binary(escrow) do
+    xrpl("ledger_entry", "escrow_string", params)
+  end
+
+  def escrow(%{escrow: escrow} = params) when is_map(escrow) do
+    xrpl("ledger_entry", "escrow_object", params)
   end
 
   def escrow!(params), do: params |> escrow() |> unwrap_or_raise()
+
+  defparams "escrow_string" do
+    required(:escrow, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "escrow_object" do
+    required :escrow, :map do
+      required(:owner, :string, format: XRPL.account_address_regex())
+      required(:seq, :integer)
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
 
   @doc """
   Retrieve a PayChannel entry, which holds XRP for asynchronous payments.
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-paychannel-object
   """
-  def payment_channel(ledger_index, object_id) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{payment_channel: object_id, ledger_index: ledger_index}]
-    })
+  def payment_channel(params) do
+    xrpl("ledger_entry", "payment_channel", params)
+  end
+
+  def payment_channel!(params), do: params |> payment_channel() |> unwrap_or_raise()
+
+  defparams "payment_channel" do
+    required(:payment_channel, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -148,18 +253,33 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-depositpreauth-object
   """
-  def deposit_preauth(ledger_index, object_id) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{deposit_preauth: object_id, ledger_index: ledger_index}]
-    })
+  def deposit_preauth(%{deposit_preauth: deposit_preauth} = params) when is_binary(deposit_preauth) do
+    xrpl("ledger_entry", "deposit_preauth_string", params)
   end
 
-  def deposit_preauth(ledger_index, owner, authorized) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{deposit_preauth: %{owner: owner, authorized: authorized}, ledger_index: ledger_index}]
-    })
+  def deposit_preauth(%{deposit_preauth: deposit_preauth} = params) when is_map(deposit_preauth) do
+    xrpl("ledger_entry", "deposit_preauth_object", params)
+  end
+
+  def deposit_preauth!(params), do: params |> deposit_preauth() |> unwrap_or_raise()
+
+  defparams "deposit_preauth_string" do
+    required(:deposit_preauth, :string, format: XRPL.ledger_entry_regex())
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "deposit_preauth_object" do
+    required(:deposit_preauth, :map) do
+      required(:owner, :string, format: XRPL.account_address_regex())
+      required(:authorized, :string, format: XRPL.account_address_regex())
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -167,18 +287,31 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-ticket-object
   """
-  def ticket(ledger_index, ledger_entry_id) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{ticket: ledger_entry_id, ledger_index: ledger_index}]
-    })
+  def ticket(%{ticket: ticket} = params) when is_binary(ticket) do
+    xrpl("ledger_entry", "ticket_string", params)
   end
 
-  def ticket(ledger_index, account, seq) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{ticket: %{account: account, ticket_seq: seq}, ledger_index: ledger_index}]
-    })
+  def ticket(%{ticket: ticket} = params) when is_map(ticket) do
+    xrpl("ledger_entry", "ticket_object", params)
+  end
+
+  def ticket!(params), do: params |> ticket() |> unwrap_or_raise()
+
+  defparams "ticket_string" do
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
+  end
+
+  defparams "ticket_object" do
+    required(:ticket, :map) do
+      required(:account, :string, format: XRPL.account_address_regex())
+      required(:ticket_seq, :integer)
+    end
+
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 
   @doc """
@@ -186,10 +319,14 @@ defmodule XRPL.LedgerEntry do
 
   Official documentation: https://xrpl.org/ledger_entry.html#get-nft-page
   """
-  def nft_page(ledger_index, ledger_entry_id) do
-    post("/", %{
-      method: "ledger_entry",
-      params: [%{nft_page: ledger_entry_id, ledger_index: ledger_index}]
-    })
+  def nft_page(params) do
+    xrpl("ledger_entry", "nft_page", params)
+  end
+
+  defparams "nft_page" do
+    required(:nft_page, :string, format: XRPL.ledger_entry_regex())
+    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:binary, :boolean, default: false)
   end
 end

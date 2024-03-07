@@ -142,4 +142,17 @@ defmodule XRPL do
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/basic-data-types/#ledger-index
   """
   def ledger_index_regex, do: ~r/^(\d+|current|closed|validated)$/
+
+  @doc """
+  The HTTP / WebSocket APIs support two formats of currency code:
+
+  Standard Currency Codes: As a 3-character string such as "EUR" or "USD".
+  Nonstandard Currency Codes: As a 160-bit hexadecimal string, such as "0158415500000000C1F76FF6ECB0BAC600000000". This is uncommon.
+  Tokens with the same code can ripple across connected trust lines. Currency codes have no other behavior built into the XRP Ledger.
+
+  Official documentation: https://xrpl.org/docs/references/protocol/data-types/currency-formats/#currency-codes
+  """
+  def currency_regex do
+    ~r/^(?!(XRP$))[A-Za-z0-9\?\!\@\#\$\%\^\&\*\(\)\{\}\[\]\|]{3}$|^(?![0]{2})[A-Fa-f0-9]{40}$/
+  end
 end
