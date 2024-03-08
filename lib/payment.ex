@@ -8,19 +8,78 @@ defmodule XRPL.Payment do
   Official documentation: https://xrpl.org/payment-channel-methods.html
   """
 
-  import XRPL
+  use XRPL
 
-  def channel_verify(amount, channel_id, signature, public_key) do
-    post("/", %{
-      method: "channel_verify",
-      params: [
-        %{
-          amount: amount,
-          channel_id: channel_id,
-          signature: signature,
-          public_key: public_key
-        }
-      ]
-    })
+  @doc """
+  The channel_authorize method creates a signature that can be used to redeem a specific amount of XRP from a payment channel.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/payment-channel-methods/channel_authorize/
+  """
+  def channel_authorize(%{secret: _} = params) do
+    xrpl("channel_authorize", "channel_authorize_with_secret", params)
+  end
+
+  def channel_authorize(%{seed: _} = params) do
+    xrpl("channel_authorize", "channel_authorize_with_seed", params)
+  end
+
+  def channel_authorize(%{seed_hex: _} = params) do
+    xrpl("channel_authorize", "channel_authorize_with_seed_hex", params)
+  end
+
+  def channel_authorize(%{passphrase: _} = params) do
+    xrpl("channel_authorize", "channel_authorize_with_passphrase", params)
+  end
+
+  def channel_authorize(_params) do
+    {:error, :invalid_params}
+  end
+
+  def channel_authorize!(params), do: params |> channel_authorize() |> unwrap_or_raise()
+
+  defparams "channel_authorize_with_secret" do
+    required(:channel_id, :string)
+    required(:amount, :string)
+    required(:secret, :string)
+    optional(:key_type, :enum, values: ["ed25519", "secp256k1"], default: "secp256k1")
+  end
+
+  defparams "channel_authorize_with_seed" do
+    required(:channel_id, :string)
+    required(:amount, :string)
+    required(:seed, :string)
+    optional(:key_type, :enum, values: ["ed25519", "secp256k1"], default: "secp256k1")
+  end
+
+  defparams "channel_authorize_with_seed_hex" do
+    required(:channel_id, :string)
+    required(:amount, :string)
+    required(:seed_hex, :string)
+    optional(:key_type, :enum, values: ["ed25519", "secp256k1"], default: "secp256k1")
+  end
+
+  defparams "channel_authorize_with_passphrase" do
+    required(:channel_id, :string)
+    required(:amount, :string)
+    required(:passphrase, :string)
+    optional(:key_type, :enum, values: ["ed25519", "secp256k1"], default: "secp256k1")
+  end
+
+  @doc """
+  The channel_verify method verifies a signature that can be used to redeem a specific amount of XRP from a payment channel.
+
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/payment-channel-methods/channel_verify/
+  """
+  def channel_verify(params) do
+    xrpl("channel_verify", params)
+  end
+
+  def channel_verify!(params), do: params |> channel_verify() |> unwrap_or_raise()
+
+  defparams "channel_verify" do
+    required(:channel_id, :string)
+    required(:amount, :string)
+    required(:public_key, :string, format: XRPL.public_key_regex())
+    required(:signature, :string)
   end
 end

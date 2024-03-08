@@ -8,6 +8,7 @@
     "noripple",
     "preauth",
     "preauthorization",
+    "secp",
     "trustlines",
     "XRPL"
   ]

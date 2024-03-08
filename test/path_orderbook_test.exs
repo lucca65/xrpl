@@ -92,7 +92,7 @@ defmodule XRPL.PathOrderbookTest do
     test "it returns an error if we don't provide the required param" do
       assert {:error, %{errors: errors}} = PathOrderbook.deposit_authorized(%{})
 
-      assert errors == [
+      assert Enum.sort(errors) == [
                destination_account: {"can't be blank", [validation: :required]},
                source_account: {"can't be blank", [validation: :required]}
              ]
@@ -172,10 +172,10 @@ defmodule XRPL.PathOrderbookTest do
     test "it returns an error if we don't provide the required param" do
       assert {:error, %{errors: errors}} = PathOrderbook.ripple_path_find(%{})
 
-      assert errors == [
-               destination_amount: {"can't be blank", [validation: :required]},
-               destination_account: {"can't be blank", [validation: :required]},
-               source_account: {"can't be blank", [validation: :required]}
+      assert Enum.sort(errors) == [
+               {:destination_account, {"can't be blank", [validation: :required]}},
+               {:destination_amount, {"can't be blank", [validation: :required]}},
+               {:source_account, {"can't be blank", [validation: :required]}}
              ]
     end
 

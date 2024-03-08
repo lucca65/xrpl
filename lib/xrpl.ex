@@ -95,6 +95,8 @@ defmodule XRPL do
   """
   def account_address_regex, do: ~r/^r[1-9a-np-zA-NP-Z]{24,34}$/
 
+  def public_key_regex, do: ~r/^n[1-9a-np-zA-NP-Z]{1,53}$/
+
   @doc """
   Each ledger entry has a unique ID. The ID is derived by hashing important contents of the entry, along with a namespace identifier. The ledger entry type determines the namespace identifier to use and which contents to include in the hash. This ensures every ID is unique. The hash function is SHA-512Half.
 
