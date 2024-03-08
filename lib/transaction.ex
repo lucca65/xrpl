@@ -6,7 +6,7 @@ defmodule XRPL.Transaction do
   Official RPC documentation https://xrpl.org/transaction-methods.html
   """
 
-  import XRPL
+  use XRPL
 
   @doc """
   A submit-only request includes the following parameters:
@@ -16,11 +16,13 @@ defmodule XRPL.Transaction do
 
   Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/submit/#submit
   """
-  def submit(tx_blob, fail_hard \\ false) do
-    post("/", %{
-      method: "submit",
-      params: [%{tx_blob: tx_blob, fail_hard: fail_hard}]
-    })
+  def submit(params) do
+    xrpl("submit", params)
+  end
+
+  def submit!(params), do: params |> submit() |> unwrap_or_raise()
+
+  defparams "submit" do
   end
 
   @doc """

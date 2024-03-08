@@ -52,11 +52,15 @@ defmodule XRPL.LedgerEntry do
   Official documentation: https://xrpl.org/ledger_entry.html#get-amm-object
   """
   def amm(%{amm: amm} = params) when is_map(amm) do
-    xrpl("ledger_entry", "amm_map", params)
+    xrpl("ledger_entry", "amm_string", params)
   end
 
   def amm(%{amm: amm} = params) when is_binary(amm) do
     xrpl("ledger_entry", "amm_object", params)
+  end
+
+  def amm(params) do
+    xrpl("ledger_entry", "amm_string", params)
   end
 
   def amm!(params), do: params |> amm() |> unwrap_or_raise()
@@ -99,6 +103,10 @@ defmodule XRPL.LedgerEntry do
     xrpl("ledger_entry", "directory_node_object", params)
   end
 
+  def directory_node(params) do
+    xrpl("ledger_entry", "directory_node_string", params)
+  end
+
   def directory_node!(params), do: params |> directory_node() |> unwrap_or_raise()
 
   defparams "directory_node_string" do
@@ -132,6 +140,10 @@ defmodule XRPL.LedgerEntry do
 
   def offer(%{offer: offer} = params) when is_map(offer) do
     xrpl("ledger_entry", "offer_object", params)
+  end
+
+  def offer(params) do
+    xrpl("ledger_entry", "offer_string", params)
   end
 
   def offer!(params), do: params |> offer() |> unwrap_or_raise()
@@ -208,6 +220,10 @@ defmodule XRPL.LedgerEntry do
     xrpl("ledger_entry", "escrow_object", params)
   end
 
+  def escrow(params) do
+    xrpl("ledger_entry", "escrow_string", params)
+  end
+
   def escrow!(params), do: params |> escrow() |> unwrap_or_raise()
 
   defparams "escrow_string" do
@@ -261,6 +277,10 @@ defmodule XRPL.LedgerEntry do
     xrpl("ledger_entry", "deposit_preauth_object", params)
   end
 
+  def deposit_preauth(params) do
+    xrpl("ledger_entry", "deposit_preauth_string", params)
+  end
+
   def deposit_preauth!(params), do: params |> deposit_preauth() |> unwrap_or_raise()
 
   defparams "deposit_preauth_string" do
@@ -295,9 +315,14 @@ defmodule XRPL.LedgerEntry do
     xrpl("ledger_entry", "ticket_object", params)
   end
 
+  def ticket(params) do
+    xrpl("ledger_entry", "ticket_string", params)
+  end
+
   def ticket!(params), do: params |> ticket() |> unwrap_or_raise()
 
   defparams "ticket_string" do
+    required(:ticket, :string, format: XRPL.ledger_entry_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:binary, :boolean, default: false)
@@ -322,6 +347,8 @@ defmodule XRPL.LedgerEntry do
   def nft_page(params) do
     xrpl("ledger_entry", "nft_page", params)
   end
+
+  def nft_page!(params), do: params |> nft_page() |> unwrap_or_raise()
 
   defparams "nft_page" do
     required(:nft_page, :string, format: XRPL.ledger_entry_regex())
