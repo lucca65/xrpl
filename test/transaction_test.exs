@@ -5,17 +5,29 @@ defmodule XRPL.TransactionTest do
 
   describe "submit/2" do
     test "submits a transaction to the network" do
-      assert {:ok, %Tesla.Env{} = env} =
-               Transaction.submit(
-                 "1200002280000000240000000361D4838D7EA4C6800000000000000000000000000055534400000000004B4E9C06F24296074F7BC48F92A97916C6DC5EA968400000000000000A732103AB40A0490F9B7ED8DF29D246BF2D6269820A0EE7742ACDD457BEA7C7D0931EDB74473045022100D184EB4AE5956FF600E7536EE459345C7BBCF097A84CC61A93B9AF7197EDB98702201CEA8009B7BEEBAA2AACC0359B41C427C1C5B550A4CA4B80CF2174AF2D6D5DCE81144B4E9C06F24296074F7BC48F92A97916C6DC5EA983143E9D4A2B8AA0780F682D136F7A56D6724EF53754"
-               )
+      assert {:ok, %Tesla.Env{status: 200}} =
+               Transaction.submit(%{
+                 "tx_blob" =>
+                   "1200002280000000240000000361D4838D7EA4C6800000000000000000000000000055534400000000004B4E9C06F24296074F7BC48F92A97916C6DC5EA968400000000000000A732103AB40A0490F9B7ED8DF29D246BF2D6269820A0EE7742ACDD457BEA7C7D0931EDB74473045022100D184EB4AE5956FF600E7536EE459345C7BBCF097A84CC61A93B9AF7197EDB98702201CEA8009B7BEEBAA2AACC0359B41C427C1C5B550A4CA4B80CF2174AF2D6D5DCE81144B4E9C06F24296074F7BC48F92A97916C6DC5EA983143E9D4A2B8AA0780F682D136F7A56D6724EF53754",
+                 "fail_hard" => false
+               })
+    end
 
-      assert env.method == :post
+    test "it returns an error if we don't provide the required param" do
+      assert {:error, %{errors: errors}} = Transaction.submit(%{})
+
+      assert errors == [tx_blob: {"can't be blank", [validation: :required]}]
+    end
+
+    test "calling the ! version of the function raises an error if the request fails" do
+      assert_raise XRPL.Error, "XRPL call failed: Invalid params", fn ->
+        Transaction.submit!(%{})
+      end
     end
   end
 
   describe "submit_multisigned/1" do
-    # We can't test without signing a transaction
+    # This test is failing in the original documentation as well
     @tag :skip
     test "accepts a tx_json and submits it to the network" do
       tx_json = %{
@@ -51,36 +63,98 @@ defmodule XRPL.TransactionTest do
         "hash" => "81A477E2A362D171BB16BE17B4120D9F809A327FA00242ABCA867283BEA2F4F8"
       }
 
-      assert {:ok, %Tesla.Env{} = env} = Transaction.submit_multisigned(tx_json)
-      assert env.status == 200
+      assert {:ok, %Tesla.Env{status: 200}} = Transaction.submit_multisigned(%{tx_json: tx_json})
+    end
+
+    test "it returns an error if we don't provide the required param" do
+      assert {:error, %{errors: errors}} = Transaction.submit_multisigned(%{})
+
+      assert errors == [tx_json: {"can't be blank", [validation: :required]}]
+    end
+
+    test "calling the ! version of the function raises an error if the request fails" do
+      assert_raise XRPL.Error, "XRPL call failed: Invalid params", fn ->
+        Transaction.submit_multisigned!(%{})
+      end
     end
   end
 
   describe "transaction_entry/3" do
     test "sends tx_hash and ledger_index" do
-      assert {:ok, %Tesla.Env{} = env} =
-               Transaction.transaction_entry(
-                 "C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9",
-                 56_865_245
-               )
+      assert {:ok, %Tesla.Env{status: 200}} =
+               Transaction.transaction_entry(%{
+                 tx_hash: "C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9",
+                 ledger_index: "56865245"
+               })
+    end
 
-      assert env.status == 200
+    test "it returns an error if we don't provide the required param" do
+      assert {:error, %{errors: errors}} = Transaction.transaction_entry(%{})
+
+      assert errors == [
+               tx_hash: {"can't be blank", [validation: :required]}
+             ]
+    end
+
+    test "calling the ! version of the function raises an error if the request fails" do
+      assert_raise XRPL.Error, "XRPL call failed: Invalid params", fn ->
+        Transaction.transaction_entry!(%{})
+      end
     end
   end
 
-  describe "tx/2 and tx/4" do
+  describe "tx/1" do
     test "sends transaction hash" do
-      assert {:ok, %Tesla.Env{} = env} =
-               Transaction.tx("C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9")
-
-      assert env.status == 200
+      assert {:ok, %Tesla.Env{status: 200}} =
+               Transaction.tx(%{
+                 transaction: "C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9",
+                 binary: false
+               })
     end
 
     test "sends ctid" do
-      assert {:ok, %Tesla.Env{} = env} =
-               Transaction.tx("C005523E00000000")
+      assert {:ok, %Tesla.Env{status: 200}} =
+               Transaction.tx(%{
+                 ctid: "C005523E00000000",
+                 binary: false
+               })
+    end
 
-      assert env.status == 200
+    test "it returns an error if we don't provide the required param" do
+      assert {:error, %{errors: errors}} = Transaction.tx(%{})
+
+      assert errors == [
+               transaction: {"can't be blank", [validation: :required]}
+             ]
+    end
+
+    test "calling the ! version of the function raises an error if the request fails" do
+      assert_raise XRPL.Error, "XRPL call failed: Invalid params", fn ->
+        Transaction.tx!(%{})
+      end
+    end
+  end
+
+  describe "tx_history/1" do
+    # This is deprecated on the mainnet public server
+    @tag :skip
+    test "tx_history/1" do
+      assert {:ok, %Tesla.Env{status: 200}} =
+               Transaction.tx_history(%{start: 0})
+    end
+
+    test "it returns an error if we don't provide the required param" do
+      assert {:error, %{errors: errors}} = Transaction.tx_history(%{})
+
+      assert errors == [
+               start: {"can't be blank", [validation: :required]}
+             ]
+    end
+
+    test "calling the ! version of the function raises an error if the request fails" do
+      assert_raise XRPL.Error, "XRPL call failed: Invalid params", fn ->
+        Transaction.tx_history!(%{})
+      end
     end
   end
 end

@@ -107,7 +107,7 @@ defmodule XRPL.PathOrderbookTest do
 
   describe "nft_buy_offers/1" do
     # Test failing in the original documentation as well
-    # @tag :skip
+    @tag :skip
     test "uses ledger_index" do
       assert {:ok, %Tesla.Env{status: 200}} =
                PathOrderbook.nft_buy_offers(%{
@@ -119,9 +119,7 @@ defmodule XRPL.PathOrderbookTest do
     test "it returns an error if we don't provide the required param" do
       assert {:error, %{errors: errors}} = PathOrderbook.nft_buy_offers(%{})
 
-      assert errors == [
-               nft_id: {"can't be blank", [validation: :required]}
-             ]
+      assert errors == [nft_id: {"can't be blank", [validation: :required]}]
     end
 
     test "calling the ! version of the function raises an error if the request fails" do

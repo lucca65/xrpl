@@ -23,6 +23,8 @@ defmodule XRPL.Transaction do
   def submit!(params), do: params |> submit() |> unwrap_or_raise()
 
   defparams "submit" do
+    required(:tx_blob, :string)
+    optional(:fail_hard, :boolean, default: false)
   end
 
   @doc """
@@ -31,11 +33,77 @@ defmodule XRPL.Transaction do
 
   Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/submit_multisigned/#submit_multisigned
   """
-  def submit_multisigned(tx_json) do
-    post("/", %{
-      method: "submit_multisigned",
-      params: [%{tx_json: tx_json}]
-    })
+  def submit_multisigned(params) do
+    xrpl("submit_multisigned", params)
+  end
+
+  def submit_multisigned!(params), do: params |> submit_multisigned() |> unwrap_or_raise()
+
+  defparams "submit_multisigned" do
+    required(:tx_json, :map) do
+      required(:Account, :string, format: XRPL.account_address_regex())
+
+      required(:TransactionType, :enum,
+        values: [
+          "AccountSet",
+          "AccountDelete",
+          "AMMBid",
+          "AMMCreate",
+          "AMMDelete",
+          "AMMDeposit",
+          "AMMVote",
+          "AMMWithdraw",
+          "CheckCancel",
+          "CheckCash",
+          "CheckCreate",
+          "Clawback",
+          "DepositPreauth",
+          "DIDDelete",
+          "DIDSet",
+          "EscrowCancel",
+          "EscrowCreate",
+          "EscrowFinish",
+          "NFTokenAcceptOffer",
+          "NFTokenBurn",
+          "NFTokenCancelOffer",
+          "NFTokenCreateOffer",
+          "NFTokenMint",
+          "OfferCancel",
+          "OfferCreate",
+          "Payment",
+          "PaymentChannelClaim",
+          "PaymentChannelCreate",
+          "PaymentChannelFund",
+          "SetRegularKey",
+          "SignerListSet",
+          "TicketCreate",
+          "TrustSet",
+          "XChainAccountCreateCommit",
+          "XChainAddAccountCreateAttestation",
+          "XChainAddClaimAttestation",
+          "XChainClaim",
+          "XChainCommit",
+          "XChainCreateBridge",
+          "XChainCreateClaimID",
+          "XChainModifyBridge"
+        ]
+      )
+
+      required(:Fee, :string)
+      optional(:Sequence, :integer)
+      optional(:AccountTxnID, :string)
+      optional(:Flags, :integer)
+      optional(:LastLedgerSequence, :integer)
+      optional(:Memos, {:array, :map})
+      optional(:NetworkID, :integer)
+      optional(:Signers, {:array, :map})
+      optional(:SourceTag, :integer)
+      optional(:SigningPubKey, :string)
+      optional(:TicketSequence, :integer)
+      optional(:TxnSignature, :string)
+    end
+
+    optional(:fail_hard, :boolean, default: false)
   end
 
   @doc """
@@ -43,23 +111,16 @@ defmodule XRPL.Transaction do
 
   Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/transaction_entry/#transaction_entry
   """
-  def transaction_entry(tx_hash, ledger_index \\ nil, ledger_hash \\ nil) do
-    params = %{tx_hash: tx_hash}
+  def transaction_entry(params) do
+    xrpl("transaction_entry", params)
+  end
 
-    params =
-      if ledger_index != nil,
-        do: Map.put(params, :ledger_index, ledger_index),
-        else: params
+  def transaction_entry!(params), do: params |> transaction_entry() |> unwrap_or_raise()
 
-    params =
-      if ledger_hash != nil,
-        do: Map.put(params, :ledger_hash, ledger_hash),
-        else: params
-
-    post("/", %{
-      method: "transaction_entry",
-      params: [params]
-    })
+  defparams "transaction_entry" do
+    required(:tx_hash, :string)
+    optional(:ledger_index, :string)
+    optional(:ledger_hash, :string)
   end
 
   @doc """
@@ -67,40 +128,34 @@ defmodule XRPL.Transaction do
 
   Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/tx/#tx
   """
-  def tx(ctid_or_transaction, binary \\ false)
+  def tx(%{ctid: _} = params), do: xrpl("tx", "tx_ctid", params)
+  def tx(%{transaction: _} = params), do: xrpl("tx", "tx_transaction", params)
+  def tx(params), do: xrpl("tx", "tx_transaction", params)
+  def tx!(params), do: params |> tx() |> unwrap_or_raise()
 
-  def tx(ctid_or_transaction, binary) do
-    params =
-      if String.length(ctid_or_transaction) == 64 do
-        %{transaction: ctid_or_transaction, binary: binary}
-      else
-        %{ctid: ctid_or_transaction, binary: binary}
-      end
-
-    post("/", %{
-      method: "tx",
-      params: [params]
-    })
+  defparams "tx_ctid" do
+    required(:ctid, :string)
+    optional(:binary, :boolean, default: false)
+    optional(:min_ledger, :integer)
+    optional(:max_ledger, :integer)
   end
 
-  def tx(ctid_or_transaction, min_ledger, max_ledger, binary \\ false) do
-    params =
-      if String.length(ctid_or_transaction) == 64 do
-        %{transaction: ctid_or_transaction}
-      else
-        %{ctid: ctid_or_transaction}
-      end
+  defparams "tx_transaction" do
+    required(:transaction, :string)
+    optional(:binary, :boolean, default: false)
+    optional(:min_ledger, :integer)
+    optional(:max_ledger, :integer)
+  end
 
-    params =
-      Map.merge(params, %{
-        min_ledger: min_ledger,
-        max_ledger: max_ledger,
-        binary: binary
-      })
+  @doc """
+  The tx_history method retrieves some of the most recent transactions made.
 
-    post("/", %{
-      method: "tx",
-      params: [params]
-    })
+  Official documentation: https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/tx_history
+  """
+  def tx_history(params), do: xrpl("tx_history", params)
+  def tx_history!(params), do: params |> tx_history() |> unwrap_or_raise()
+
+  defparams "tx_history" do
+    required(:start, :integer, default: 0)
   end
 end
