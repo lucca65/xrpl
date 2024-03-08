@@ -13,8 +13,8 @@ This is currently a work in progress and there is still a lot to do. Any help is
 - [x] Ledger methods
 - [x] Transaction methods
 - [x] Path and Order Book methods
-- [ ] Payment methods
-- [ ] Server methods
+- [x] Payment methods
+- [x] Server methods
 - [ ] Clio methods
 - [ ] Utility methods
 

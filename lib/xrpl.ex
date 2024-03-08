@@ -20,9 +20,6 @@ defmodule XRPL do
           {:ok, attrs} ->
             post("/", %{method: method, params: [attrs]})
 
-          {:error, :invalid_params} ->
-            {:error, :invalid_params}
-
           {:error, %Ecto.Changeset{errors: error} = changeset} ->
             {:error, changeset}
         end
@@ -32,9 +29,6 @@ defmodule XRPL do
         case validate(validator, params) do
           {:ok, attrs} ->
             post("/", %{method: method, params: [attrs]})
-
-          {:error, :invalid_params} ->
-            {:error, :invalid_params}
 
           {:error, %Ecto.Changeset{errors: error} = changeset} ->
             {:error, changeset}
