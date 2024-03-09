@@ -1,11 +1,11 @@
 defmodule XRPL.TransactionTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.Transaction
 
   describe "submit/2" do
     test "submits a transaction to the network" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"accepted" => true}} =
                Transaction.submit(%{
                  "tx_blob" =>
                    "1200002280000000240000000361D4838D7EA4C6800000000000000000000000000055534400000000004B4E9C06F24296074F7BC48F92A97916C6DC5EA968400000000000000A732103AB40A0490F9B7ED8DF29D246BF2D6269820A0EE7742ACDD457BEA7C7D0931EDB74473045022100D184EB4AE5956FF600E7536EE459345C7BBCF097A84CC61A93B9AF7197EDB98702201CEA8009B7BEEBAA2AACC0359B41C427C1C5B550A4CA4B80CF2174AF2D6D5DCE81144B4E9C06F24296074F7BC48F92A97916C6DC5EA983143E9D4A2B8AA0780F682D136F7A56D6724EF53754",
@@ -81,11 +81,15 @@ defmodule XRPL.TransactionTest do
 
   describe "transaction_entry/3" do
     test "sends tx_hash and ledger_index" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      ledger_index = "56865245"
+
+      assert {:ok, %{"ledger_index" => received_ledger_index}} =
                Transaction.transaction_entry(%{
                  tx_hash: "C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9",
-                 ledger_index: "56865245"
+                 ledger_index: ledger_index
                })
+
+      assert String.to_integer(ledger_index) == received_ledger_index
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -105,7 +109,7 @@ defmodule XRPL.TransactionTest do
 
   describe "tx/1" do
     test "sends transaction hash" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"Account" => _, "Fee" => _}} =
                Transaction.tx(%{
                  transaction: "C53ECF838647FA5A4C780377025FEC7999AB4182590510CA461444B207AB74A9",
                  binary: false
@@ -113,7 +117,7 @@ defmodule XRPL.TransactionTest do
     end
 
     test "sends ctid" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"Account" => _}} =
                Transaction.tx(%{
                  ctid: "C005523E00000000",
                  binary: false

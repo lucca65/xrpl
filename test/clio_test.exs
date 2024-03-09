@@ -1,17 +1,18 @@
 defmodule XRPL.ClioTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.Clio
 
   describe "server_info/0" do
     test "server_info/0" do
-      assert {:ok, %Tesla.Env{status: 200}} = Clio.server_info()
+      assert {:ok, %{"info" => _}} = Clio.server_info()
     end
   end
 
   describe "ledger/1" do
-    test "ledger/1" do
-      assert {:ok, %Tesla.Env{status: 200}} = Clio.ledger(%{ledger_index: "validated"})
+    test "validated ledger" do
+      assert {:ok, %{"ledger" => _, "ledger_hash" => _}} =
+               Clio.ledger(%{ledger_index: "validated"})
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -30,9 +31,13 @@ defmodule XRPL.ClioTest do
   end
 
   describe "nft_history/1" do
-    test "nft_history/1" do
-      assert {:ok, %Tesla.Env{status: 200}} =
-               Clio.nft_history(%{nft_id: "00080000B4F4AFC5FBCBD76873F18006173D2193467D3EE70000099B00000000"})
+    test "use an existing nft_id" do
+      nft_id = "00080000B4F4AFC5FBCBD76873F18006173D2193467D3EE70000099B00000000"
+
+      assert {:ok, %{"nft_id" => received_nft_id}} =
+               Clio.nft_history(%{nft_id: nft_id})
+
+      assert(nft_id == received_nft_id)
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -50,8 +55,12 @@ defmodule XRPL.ClioTest do
 
   describe "nft_info/1" do
     test "nft_info/1" do
-      assert {:ok, %Tesla.Env{status: 200}} =
-               Clio.nft_info(%{nft_id: "000817024409AFED2C9EC5604D4095464C0F0DC015198D2F3E04AFA90000090D"})
+      nft_id = "000817024409AFED2C9EC5604D4095464C0F0DC015198D2F3E04AFA90000090D"
+
+      assert {:ok, %{"nft_id" => received_nft_id}} =
+               Clio.nft_info(%{nft_id: nft_id})
+
+      assert nft_id == received_nft_id
     end
 
     test "it returns an error if we don't provide the required param" do

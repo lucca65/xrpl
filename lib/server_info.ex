@@ -31,7 +31,7 @@ defmodule XRPL.ServerInfo do
   def manifest!(params), do: unwrap_or_raise(manifest(params))
 
   defparams "manifest" do
-    required(:public_key, :string, format: :public_key)
+    required(:public_key, :string)
   end
 
   @doc """

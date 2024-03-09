@@ -1,5 +1,5 @@
 defmodule XRPL.LedgerEntryTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.LedgerEntry
 
@@ -8,12 +8,14 @@ defmodule XRPL.LedgerEntryTest do
   describe "by_id/1" do
     test "returns ledger entry for a given index" do
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"index" => received_index}} =
           LedgerEntry.by_id(%{
             ledger_index: "validated",
             index: @index
           })
       )
+
+      assert @index == received_index
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -30,10 +32,14 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "account_root/1" do
     test "returns account root for a given index" do
+      account = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
-          LedgerEntry.account_root(%{ledger_index: "validated", account_root: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"})
+        {:ok, %{"node" => %{"Account" => received_account}}} =
+          LedgerEntry.account_root(%{ledger_index: "validated", account_root: account})
       )
+
+      assert account == received_account
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -79,7 +85,7 @@ defmodule XRPL.LedgerEntryTest do
   describe "directory_node/1" do
     test "search using directory object with optional fields" do
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"index" => _, "ledger_hash" => _}} =
           LedgerEntry.directory_node(%{
             ledger_index: "validated",
             directory: %{
@@ -105,7 +111,7 @@ defmodule XRPL.LedgerEntryTest do
   describe "offer/1" do
     test "returns offer by sending offer object" do
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, _} =
           LedgerEntry.offer(%{
             ledger_index: "validated",
             offer: %{account: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn", seq: 359}
@@ -128,7 +134,7 @@ defmodule XRPL.LedgerEntryTest do
   describe "ripple_state/1" do
     test "returns ripple state by sending ripple state object" do
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"validated" => true, "node" => %{"Balance" => _}}} =
           LedgerEntry.ripple_state(%{
             ripple_state: %{
               accounts: [
@@ -156,13 +162,17 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "check/1" do
     test "returns check by sending check object" do
+      check = "C4A46CCD8F096E994C4B0DEAB6CE98E722FC17D7944C28B95127C2659C47CBEB"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"node" => %{"index" => received_check}}} =
           LedgerEntry.check(%{
             ledger_index: "validated",
-            check: "C4A46CCD8F096E994C4B0DEAB6CE98E722FC17D7944C28B95127C2659C47CBEB"
+            check: check
           })
       )
+
+      assert check == received_check
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -179,16 +189,20 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "escrow/1" do
     test "escrow/1" do
+      account = "rL4fPHi2FWGwRGRQSH7gBcxkuo2b9NTjKK"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"node" => %{"Account" => received_account}}} =
           LedgerEntry.escrow(%{
             ledger_index: "validated",
             escrow: %{
-              owner: "rL4fPHi2FWGwRGRQSH7gBcxkuo2b9NTjKK",
+              owner: account,
               seq: 126
             }
           })
       )
+
+      assert account == received_account
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -199,13 +213,22 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "payment_channel/1" do
     test "returns payment channel by sending payment channel object" do
+      index = "C7F634794B79DB40E87179A9D1BF05D05797AE7E92DF8E93FD6656E8C4BE3AE7"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok,
+         %{
+           "node" => %{
+             "index" => received_index
+           }
+         }} =
           LedgerEntry.payment_channel(%{
             ledger_index: "validated",
-            payment_channel: "C7F634794B79DB40E87179A9D1BF05D05797AE7E92DF8E93FD6656E8C4BE3AE7"
+            payment_channel: index
           })
       )
+
+      assert index == received_index
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -222,16 +245,22 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "deposit_preauth/1" do
     test "deposit_preauth/1" do
+      owner = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
+      authorized = "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"node" => %{"Account" => received_account, "Authorize" => received_authorized}}} =
           LedgerEntry.deposit_preauth(%{
             ledger_index: "validated",
             deposit_preauth: %{
-              owner: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
-              authorized: "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX"
+              owner: owner,
+              authorized: authorized
             }
           })
       )
+
+      assert owner == received_account
+      assert authorized == received_authorized
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -248,16 +277,28 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "ticket/1" do
     test "ticket/1" do
+      account = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
+      seq = 389
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok,
+         %{
+           "node" => %{
+             "Account" => received_account,
+             "TicketSequence" => received_seq
+           }
+         }} =
           LedgerEntry.ticket(%{
             ticket: %{
-              account: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
-              ticket_seq: 389
+              account: account,
+              ticket_seq: seq
             },
             ledger_index: "validated"
           })
       )
+
+      assert account == received_account
+      assert seq == received_seq
     end
 
     test "it returns an error if we don't provide the required param" do
@@ -274,11 +315,13 @@ defmodule XRPL.LedgerEntryTest do
 
   describe "nft_page/1" do
     test "returns nft by sending ledger entry ID" do
+      nft_id = "255DD86DDF59D778081A06D02701E9B2C9F4F01DFFFFFFFFFFFFFFFFFFFFFFFF"
+
       assert(
-        {:ok, %Tesla.Env{status: 200}} =
+        {:ok, %{"node" => %{"NFTokens" => [%{"NFToken" => %{"NFTokenID" => _}} | _]}}} =
           LedgerEntry.nft_page(%{
             ledger_index: "validated",
-            nft_page: "255DD86DDF59D778081A06D02701E9B2C9F4F01DFFFFFFFFFFFFFFFFFFFFFFFF"
+            nft_page: nft_id
           })
       )
     end

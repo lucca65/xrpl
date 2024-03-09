@@ -1,5 +1,5 @@
 defmodule XRPL.PathOrderbookTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.PathOrderbook
 
@@ -47,7 +47,7 @@ defmodule XRPL.PathOrderbookTest do
 
   describe "book_offers/1" do
     test "book_offers" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"offers" => _, "ledger_hash" => _, "ledger_index" => _}} =
                PathOrderbook.book_offers(%{
                  taker: "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
                  taker_gets: %{
@@ -157,7 +157,7 @@ defmodule XRPL.PathOrderbookTest do
 
   describe "ripple_path_find" do
     test "ripple_path_find/1" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"alternatives" => _}} =
                PathOrderbook.ripple_path_find(%{
                  source_account: "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
                  destination_account: "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",

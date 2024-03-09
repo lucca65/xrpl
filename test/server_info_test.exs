@@ -1,17 +1,17 @@
 defmodule XRPL.ServerInfoTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.ServerInfo
 
   describe "fee/0" do
     test "fee/0" do
-      assert {:ok, %Tesla.Env{status: 200}} = ServerInfo.fee()
+      assert {:ok, %{"status" => "success"}} = ServerInfo.fee()
     end
   end
 
   describe "manifest/1" do
     test "manifest/1" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"status" => "success"}} =
                ServerInfo.manifest(%{public_key: "nHUFE9prPXPrHcG3SkwP1UzAQbSphqyQkQK9ATXLZsfkezhhda3p"})
     end
 
@@ -32,19 +32,19 @@ defmodule XRPL.ServerInfoTest do
 
   describe "server_definitions/0" do
     test "server_definitions/0" do
-      assert {:ok, %Tesla.Env{status: 200}} = ServerInfo.server_definitions()
+      assert {:ok, %{"status" => "success"}} = ServerInfo.server_definitions()
     end
   end
 
   describe "server_info/0" do
     test "server_info/0" do
-      assert {:ok, %Tesla.Env{status: 200}} = ServerInfo.server_info()
+      assert {:ok, %{"status" => "success"}} = ServerInfo.server_info()
     end
   end
 
   describe "server_state/1" do
     test "server_state/1" do
-      assert {:ok, %Tesla.Env{status: 200}} = ServerInfo.server_state(%{counters: true})
+      assert {:ok, %{"status" => "success"}} = ServerInfo.server_state(%{counters: true})
     end
 
     test "it returns an error if we don't provide the required param" do

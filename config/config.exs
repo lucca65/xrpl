@@ -14,6 +14,6 @@ config :logger, :console, level: :warning, format: "[$level] $message\n", metada
 config :goal,
   ledger_index_regex: ~r/^(\d+|current|closed|validated)$/,
   ledger_entry_regex: ~r/^[a-fA-F0-9]{64}$/,
-  currency_regex: ~r/^(?!(XRP$))[A-Za-z0-9\?\!\@\#\$\%\^\&\*\(\)\{\}\[\]\|]{3}$|^(?![0]{2})[A-Fa-f0-9]{40}$/,
+  currency_regex: ~r/^[a-zA-Z0-9?!\@#\$%\^&*\>\<\(\)\{\}\[\]\|]{3}$/,
   public_key_regex: ~r/^n[1-9a-np-zA-NP-Z]{1,53}$/,
-  account_address_regex: ~r/^r[1-9a-np-zA-NP-Z]{24,34}$/
+  account_address_regex: ~r/^(?!.*(0|O|I|l))[rR][a-zA-Z1-9]{24,34}$/

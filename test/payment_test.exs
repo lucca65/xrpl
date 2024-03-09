@@ -1,5 +1,5 @@
 defmodule XRPL.PaymentTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.Payment
 
@@ -36,7 +36,7 @@ defmodule XRPL.PaymentTest do
 
   describe "channel_verify/1" do
     test "channel_verify/1" do
-      assert {:ok, %Tesla.Env{status: 200}} =
+      assert {:ok, %{"signature_verified" => true, "status" => "success"}} =
                Payment.channel_verify(%{
                  channel_id: "5DB01B7FFED6B67E6B0414DED11E051D2EE2B7619CE0EAA6286D67A3A4D5BDB3",
                  signature:

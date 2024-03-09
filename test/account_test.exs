@@ -1,5 +1,5 @@
 defmodule XRPL.AccountTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias XRPL.Account
   alias XRPL.Account, as: Account

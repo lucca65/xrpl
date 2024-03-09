@@ -179,7 +179,7 @@ defmodule XRPL.LedgerEntry do
 
   defparams "ripple_state" do
     required(:ripple_state, :map) do
-      required(:accounts, {:array, :string}, format: :account_address)
+      required(:accounts, {:array, :string})
       required(:currency, :string, format: :currency)
     end
 
