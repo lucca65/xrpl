@@ -41,8 +41,8 @@ defmodule XRPL.PathOrderbook do
   defparams "amm_info_string_string" do
     optional(:account, :string, format: :account_address)
     optional(:amm_account, :string, format: :account_address)
-    optional(:asset, :string, format: XRPL.currency_regex())
-    optional(:asset2, :string, format: XRPL.currency_regex())
+    optional(:asset, :string, format: :currency)
+    optional(:asset2, :string, format: :currency)
   end
 
   defparams "amm_info_object_string" do
@@ -50,7 +50,7 @@ defmodule XRPL.PathOrderbook do
     optional(:amm_account, :string, format: :account_address)
 
     optional(:asset, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
 
@@ -64,7 +64,7 @@ defmodule XRPL.PathOrderbook do
     optional(:asset, :string)
 
     optional(:asset2, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
   end
@@ -74,12 +74,12 @@ defmodule XRPL.PathOrderbook do
     optional(:amm_account, :string, format: :account_address)
 
     optional(:asset, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
 
     optional(:asset2, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
   end
@@ -98,17 +98,17 @@ defmodule XRPL.PathOrderbook do
 
   defparams "book_offers" do
     required(:taker_gets, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
 
     required(:taker_pays, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
     end
 
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer)
     optional(:taker, :string, format: :account_address)
   end
@@ -127,8 +127,8 @@ defmodule XRPL.PathOrderbook do
   defparams "deposit_authorized" do
     required(:source_account, :string, format: :account_address)
     required(:destination_account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 
   @doc """
@@ -144,8 +144,8 @@ defmodule XRPL.PathOrderbook do
 
   defparams "nft_buy_offers" do
     required(:nft_id, :string)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer)
     optional(:marker, :string)
   end
@@ -163,8 +163,8 @@ defmodule XRPL.PathOrderbook do
 
   defparams "nft_sell_offers" do
     required(:nft_id, :string)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer)
     optional(:marker, :string)
   end
@@ -187,7 +187,7 @@ defmodule XRPL.PathOrderbook do
     required(:destination_account, :string, format: :account_address)
 
     required(:destination_amount, :map) do
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
       optional(:issuer, :string, format: :account_address)
       required(:value, :string)
     end

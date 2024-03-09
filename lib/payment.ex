@@ -79,7 +79,7 @@ defmodule XRPL.Payment do
   defparams "channel_verify" do
     required(:channel_id, :string)
     required(:amount, :string)
-    required(:public_key, :string, format: XRPL.public_key_regex())
+    required(:public_key, :string, format: :public_key)
     required(:signature, :string)
   end
 end

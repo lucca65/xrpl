@@ -24,8 +24,8 @@ defmodule XRPL.Account do
   defparams "account_channels" do
     required(:account, :string, format: :account_address)
     optional(:destination_account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
   end
@@ -43,8 +43,8 @@ defmodule XRPL.Account do
 
   defparams "account_currencies" do
     required(:account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 
   @doc """
@@ -61,8 +61,8 @@ defmodule XRPL.Account do
 
   defparams "account_info" do
     required(:account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:queue, :boolean)
     optional(:signer_lists, :boolean)
   end
@@ -81,8 +81,8 @@ defmodule XRPL.Account do
 
   defparams "account_lines" do
     required(:account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:peer, :string, format: :account_address)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
@@ -122,8 +122,8 @@ defmodule XRPL.Account do
   defparams "account_objects" do
     required(:account, :string, format: :account_address)
     optional(:deletion_blockers_only, :boolean, default: false)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
 
@@ -156,8 +156,8 @@ defmodule XRPL.Account do
 
   defparams "account_offers" do
     required(:account, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
   end
@@ -224,8 +224,8 @@ defmodule XRPL.Account do
 
     optional(:ledger_index_min, :integer)
     optional(:ledger_index_max, :integer)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:binary, :boolean, default: false)
     optional(:forward, :boolean, default: false)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
@@ -247,8 +247,8 @@ defmodule XRPL.Account do
     required(:account, :string, format: :account_address)
     optional(:strict, :boolean, default: false)
     optional(:hotwallet, :string, format: :account_address)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 
   @doc """
@@ -267,7 +267,7 @@ defmodule XRPL.Account do
     required(:role, :enum, values: ~w[gateway user])
     optional(:transactions, :boolean, default: false)
     optional(:limit, :integer, default: 300)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 end

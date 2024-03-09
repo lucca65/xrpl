@@ -29,8 +29,8 @@ defmodule XRPL.Clio do
   def ledger!(params), do: unwrap_or_raise(ledger(params))
 
   defparams "ledger" do
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:transactions, :boolean, default: false)
     optional(:expand, :boolean, default: false)
     optional(:owner_funds, :boolean, default: false)
@@ -52,8 +52,8 @@ defmodule XRPL.Clio do
     required(:nft_id, :string)
     optional(:ledger_index_min, :integer)
     optional(:ledger_index_max, :integer)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:binary, :boolean, default: false)
     optional(:forward, :boolean, default: false)
     optional(:limit, :integer)
@@ -70,7 +70,7 @@ defmodule XRPL.Clio do
 
   defparams "nft_info" do
     required(:nft_id, :string)
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 end

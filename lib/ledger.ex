@@ -21,8 +21,8 @@ defmodule XRPL.Ledger do
   def ledger!(params), do: params |> ledger() |> unwrap_or_raise()
 
   defparams "ledger" do
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:transactions, :boolean, default: false)
     optional(:expand, :boolean, default: false)
     optional(:owner_funds, :boolean, default: false)
@@ -74,8 +74,8 @@ defmodule XRPL.Ledger do
   def ledger_data!(params), do: params |> ledger_data() |> unwrap_or_raise()
 
   defparams "ledger_data" do
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:binary, :boolean, default: false)
     optional(:limit, :integer, max: 256, default: 256)
     optional(:marker, :string)

@@ -20,10 +20,10 @@ defmodule XRPL.LedgerEntry do
   def by_id!(params), do: params |> by_id() |> unwrap_or_raise()
 
   defparams "by_id" do
-    required(:index, :string, format: XRPL.ledger_entry_regex())
+    required(:index, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -41,8 +41,8 @@ defmodule XRPL.LedgerEntry do
   defparams "account_root" do
     required(:account_root, :string, format: :account_address)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -66,27 +66,27 @@ defmodule XRPL.LedgerEntry do
   def amm!(params), do: params |> amm() |> unwrap_or_raise()
 
   defparams "amm_string" do
-    required(:amm, :string, format: XRPL.ledger_entry_regex())
+    required(:amm, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
   defparams "amm_object" do
     required :amm, :map do
       required :asset, :map do
-        required(:currency, :string, format: XRPL.currency_regex())
+        required(:currency, :string, format: :currency)
       end
 
       required :asset2, :map do
-        required(:currency, :string, format: XRPL.currency_regex())
+        required(:currency, :string, format: :currency)
         required(:issuer, :string, format: :account_address)
       end
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -110,22 +110,22 @@ defmodule XRPL.LedgerEntry do
   def directory_node!(params), do: params |> directory_node() |> unwrap_or_raise()
 
   defparams "directory_node_string" do
-    required(:directory, :string, format: XRPL.ledger_entry_regex())
+    required(:directory, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
   defparams "directory_node_object" do
     required :directory, :map do
-      optional(:dir_root, :string, format: XRPL.ledger_entry_regex())
+      optional(:dir_root, :string, format: :ledger_entry)
       optional(:owner, :string, format: :account_address)
       optional(:sub_index, :integer)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -149,9 +149,9 @@ defmodule XRPL.LedgerEntry do
   def offer!(params), do: params |> offer() |> unwrap_or_raise()
 
   defparams "offer_string" do
-    required(:offer, :string, format: XRPL.ledger_entry_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    required(:offer, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -161,8 +161,8 @@ defmodule XRPL.LedgerEntry do
       required(:seq, :integer)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -180,11 +180,11 @@ defmodule XRPL.LedgerEntry do
   defparams "ripple_state" do
     required(:ripple_state, :map) do
       required(:accounts, {:array, :string}, format: :account_address)
-      required(:currency, :string, format: XRPL.currency_regex())
+      required(:currency, :string, format: :currency)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -200,10 +200,10 @@ defmodule XRPL.LedgerEntry do
   def check!(params), do: params |> check() |> unwrap_or_raise()
 
   defparams "check" do
-    required(:check, :string, format: XRPL.ledger_entry_regex())
+    required(:check, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -227,10 +227,10 @@ defmodule XRPL.LedgerEntry do
   def escrow!(params), do: params |> escrow() |> unwrap_or_raise()
 
   defparams "escrow_string" do
-    required(:escrow, :string, format: XRPL.ledger_entry_regex())
+    required(:escrow, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -240,8 +240,8 @@ defmodule XRPL.LedgerEntry do
       required(:seq, :integer)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -257,10 +257,10 @@ defmodule XRPL.LedgerEntry do
   def payment_channel!(params), do: params |> payment_channel() |> unwrap_or_raise()
 
   defparams "payment_channel" do
-    required(:payment_channel, :string, format: XRPL.ledger_entry_regex())
+    required(:payment_channel, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -284,10 +284,10 @@ defmodule XRPL.LedgerEntry do
   def deposit_preauth!(params), do: params |> deposit_preauth() |> unwrap_or_raise()
 
   defparams "deposit_preauth_string" do
-    required(:deposit_preauth, :string, format: XRPL.ledger_entry_regex())
+    required(:deposit_preauth, :string, format: :ledger_entry)
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -297,8 +297,8 @@ defmodule XRPL.LedgerEntry do
       required(:authorized, :string, format: :account_address)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -322,9 +322,9 @@ defmodule XRPL.LedgerEntry do
   def ticket!(params), do: params |> ticket() |> unwrap_or_raise()
 
   defparams "ticket_string" do
-    required(:ticket, :string, format: XRPL.ledger_entry_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    required(:ticket, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -334,8 +334,8 @@ defmodule XRPL.LedgerEntry do
       required(:ticket_seq, :integer)
     end
 
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 
@@ -351,9 +351,9 @@ defmodule XRPL.LedgerEntry do
   def nft_page!(params), do: params |> nft_page() |> unwrap_or_raise()
 
   defparams "nft_page" do
-    required(:nft_page, :string, format: XRPL.ledger_entry_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
+    required(:nft_page, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
+    optional(:ledger_hash, :string, format: :ledger_entry)
     optional(:binary, :boolean, default: false)
   end
 end

@@ -31,7 +31,7 @@ defmodule XRPL.ServerInfo do
   def manifest!(params), do: unwrap_or_raise(manifest(params))
 
   defparams "manifest" do
-    required(:public_key, :string, format: XRPL.public_key_regex())
+    required(:public_key, :string, format: :public_key)
   end
 
   @doc """
@@ -69,6 +69,6 @@ defmodule XRPL.ServerInfo do
   def server_state!(params), do: unwrap_or_raise(server_state(params))
 
   defparams "server_state" do
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    optional(:ledger_index, :string, format: :ledger_index)
   end
 end
