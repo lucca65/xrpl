@@ -17,8 +17,6 @@ def deps do
 end
 ```
 
-
-
 ## Usage
 
 ### Configuration
@@ -42,11 +40,6 @@ config :xrpl,
   network: :devnet,
   devnet: "http://localhost:51234/"
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/xrpl>.
-
 
 ### Params
 
@@ -122,7 +115,7 @@ We also support exceptions so if you want to throw an exception instead of getti
 XRPL.Account.account_info!(%{account: "not_a_valid_account"})
 ```
 
-We also validate the parameters you pass to the functions. Some of the parameters are required and some are optional and you will get predictable [`Ecto.Changeset`)[https://hexdocs.pm/ecto/Ecto.html#module-changesets] validation errors if you pass something wrong.
+We also validate the parameters you pass to the functions. Some of the parameters are required and some are optional and you will get predictable (`Ecto.Changeset`)[https://hexdocs.pm/ecto/Ecto.html#module-changesets] validation errors if you pass something wrong.
 
 
 ### Utilities
@@ -130,8 +123,13 @@ We also validate the parameters you pass to the functions. Some of the parameter
 We also provide you with a few useful regex's to validate some of the data you may encounter during development. For example, if you want an regex for a valid XRP address, you can use:
 
 ```elixir
-:account_address
+iex(1)> XRPL.account_address_regex
+~r/^(?!.*(0|O|I|l))[rR][a-zA-Z1-9]{24,34}$/
 ```
 Of course they are available on HexDocs: https://hexdocs.pm/xrpl/XRPL.html#account_address_regex/0
 
 Those regex's are also used internally to validate the parameters you pass to the functions.
+
+## Thanks
+
+This project was part of XRPL Grant Program Wave 5 and was funded by Ripple. Thanks to them for supporting open source projects. Checkout the [announcement here](https://dev.to/ripplexdev/xrpl-grants-wave-5-awardees-driving-innovation-in-the-xrpl-ecosystem-3d9c)
