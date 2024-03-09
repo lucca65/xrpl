@@ -41,7 +41,7 @@ defmodule XRPL.Transaction do
 
   defparams "submit_multisigned" do
     required(:tx_json, :map) do
-      required(:Account, :string, format: XRPL.account_address_regex())
+      required(:Account, :string, format: :account_address)
 
       required(:TransactionType, :enum,
         values: [

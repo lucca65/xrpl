@@ -22,8 +22,8 @@ defmodule XRPL.Account do
   def account_channels!(params), do: params |> account_channels() |> unwrap_or_raise()
 
   defparams "account_channels" do
-    required(:account, :string, format: XRPL.account_address_regex())
-    optional(:destination_account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
+    optional(:destination_account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:limit, :integer, min: 10, max: 400, default: 200)
@@ -42,7 +42,7 @@ defmodule XRPL.Account do
   def account_currencies!(params), do: params |> account_currencies() |> unwrap_or_raise()
 
   defparams "account_currencies" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
   end
@@ -60,7 +60,7 @@ defmodule XRPL.Account do
   def account_info!(params), do: params |> account_info() |> unwrap_or_raise()
 
   defparams "account_info" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:queue, :boolean)
@@ -80,10 +80,10 @@ defmodule XRPL.Account do
   def account_lines!(params), do: params |> account_lines() |> unwrap_or_raise()
 
   defparams "account_lines" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
-    optional(:peer, :string, format: XRPL.account_address_regex())
+    optional(:peer, :string, format: :account_address)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
   end
@@ -100,9 +100,9 @@ defmodule XRPL.Account do
   def account_nfts!(params), do: params |> account_nfts() |> unwrap_or_raise()
 
   defparams "account_nfts" do
-    required(:account, :string, format: XRPL.account_address_regex())
-    optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
-    optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
+    required(:account, :string, format: :account_address)
+    optional(:ledger_hash, :string, format: :ledger_entry)
+    optional(:ledger_index, :string, format: :ledger_index)
     optional(:limit, :integer, min: 10, max: 400, default: 200)
     optional(:marker, :string)
   end
@@ -120,7 +120,7 @@ defmodule XRPL.Account do
   def account_objects!(params), do: params |> account_objects() |> unwrap_or_raise()
 
   defparams "account_objects" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:deletion_blockers_only, :boolean, default: false)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
@@ -155,7 +155,7 @@ defmodule XRPL.Account do
   def account_offers!(params), do: params |> account_offers() |> unwrap_or_raise()
 
   defparams "account_offers" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:limit, :integer, min: 10, max: 400, default: 200)
@@ -174,7 +174,7 @@ defmodule XRPL.Account do
   def account_tx!(params), do: params |> account_tx() |> unwrap_or_raise()
 
   defparams "account_tx" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
 
     optional(:tx_type, :enum,
       values: [
@@ -244,9 +244,9 @@ defmodule XRPL.Account do
   def gateway_balances!(params), do: params |> gateway_balances() |> unwrap_or_raise()
 
   defparams "gateway_balances" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     optional(:strict, :boolean, default: false)
-    optional(:hotwallet, :string, format: XRPL.account_address_regex())
+    optional(:hotwallet, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
   end
@@ -263,7 +263,7 @@ defmodule XRPL.Account do
   def noripple_check!(params), do: params |> noripple_check() |> unwrap_or_raise()
 
   defparams "noripple_check" do
-    required(:account, :string, format: XRPL.account_address_regex())
+    required(:account, :string, format: :account_address)
     required(:role, :enum, values: ~w[gateway user])
     optional(:transactions, :boolean, default: false)
     optional(:limit, :integer, default: 300)

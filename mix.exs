@@ -34,7 +34,8 @@ defmodule Xrpl.MixProject do
       {:jason, ">= 1.0.0"},
 
       # Validation
-      {:goal, "~> 0.2"},
+      # {:goal, "~> 0.2"},
+      {:goal, github: "lucca65/goal", branch: "regex"},
 
       # Dev
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},

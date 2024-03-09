@@ -39,7 +39,7 @@ defmodule XRPL.LedgerEntry do
   def account_root!(params), do: params |> account_root() |> unwrap_or_raise()
 
   defparams "account_root" do
-    required(:account_root, :string, format: XRPL.account_address_regex())
+    required(:account_root, :string, format: :account_address)
 
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
@@ -81,7 +81,7 @@ defmodule XRPL.LedgerEntry do
 
       required :asset2, :map do
         required(:currency, :string, format: XRPL.currency_regex())
-        required(:issuer, :string, format: XRPL.account_address_regex())
+        required(:issuer, :string, format: :account_address)
       end
     end
 
@@ -120,7 +120,7 @@ defmodule XRPL.LedgerEntry do
   defparams "directory_node_object" do
     required :directory, :map do
       optional(:dir_root, :string, format: XRPL.ledger_entry_regex())
-      optional(:owner, :string, format: XRPL.account_address_regex())
+      optional(:owner, :string, format: :account_address)
       optional(:sub_index, :integer)
     end
 
@@ -157,7 +157,7 @@ defmodule XRPL.LedgerEntry do
 
   defparams "offer_object" do
     required :offer, :map do
-      required(:account, :string, format: XRPL.account_address_regex())
+      required(:account, :string, format: :account_address)
       required(:seq, :integer)
     end
 
@@ -179,7 +179,7 @@ defmodule XRPL.LedgerEntry do
 
   defparams "ripple_state" do
     required(:ripple_state, :map) do
-      required(:accounts, {:array, :string}, format: XRPL.account_address_regex())
+      required(:accounts, {:array, :string}, format: :account_address)
       required(:currency, :string, format: XRPL.currency_regex())
     end
 
@@ -236,7 +236,7 @@ defmodule XRPL.LedgerEntry do
 
   defparams "escrow_object" do
     required :escrow, :map do
-      required(:owner, :string, format: XRPL.account_address_regex())
+      required(:owner, :string, format: :account_address)
       required(:seq, :integer)
     end
 
@@ -293,8 +293,8 @@ defmodule XRPL.LedgerEntry do
 
   defparams "deposit_preauth_object" do
     required(:deposit_preauth, :map) do
-      required(:owner, :string, format: XRPL.account_address_regex())
-      required(:authorized, :string, format: XRPL.account_address_regex())
+      required(:owner, :string, format: :account_address)
+      required(:authorized, :string, format: :account_address)
     end
 
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
@@ -330,7 +330,7 @@ defmodule XRPL.LedgerEntry do
 
   defparams "ticket_object" do
     required(:ticket, :map) do
-      required(:account, :string, format: XRPL.account_address_regex())
+      required(:account, :string, format: :account_address)
       required(:ticket_seq, :integer)
     end
 

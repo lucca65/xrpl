@@ -5,7 +5,8 @@ defmodule XRPL do
 
   use Tesla
 
-  plug(Tesla.Middleware.BaseUrl, Application.get_env(:xrpl, :mainnet))
+  @network Application.compile_env(:xrpl, :network)
+  plug(Tesla.Middleware.BaseUrl, Application.get_env(:xrpl, @network))
   plug(XRPL.Middleware.Error)
   plug(Tesla.Middleware.JSON)
 
@@ -16,19 +17,19 @@ defmodule XRPL do
       import XRPL
 
       def xrpl(method, params) do
-        case validate(method, params) do
-          {:ok, attrs} ->
-            post("/", %{method: method, params: [attrs]})
-
-          {:error, %Ecto.Changeset{errors: error} = changeset} ->
-            {:error, changeset}
-        end
+        xrpl(method, method, params)
       end
 
       def xrpl(method, validator, params) do
         case validate(validator, params) do
           {:ok, attrs} ->
-            post("/", %{method: method, params: [attrs]})
+            case post("/", %{method: method, params: [attrs]}) do
+              {:ok, %{status: 200, body: body}} ->
+                {:ok, body["result"]}
+
+              {:error, %{status: 200, body: body}} ->
+                {:error, body["result"]}
+            end
 
           {:error, %Ecto.Changeset{errors: error} = changeset} ->
             {:error, changeset}
@@ -56,28 +57,6 @@ defmodule XRPL do
   end
 
   @doc """
-  Many objects in the XRP Ledger, particularly transactions and ledgers, are uniquely identified by a 256-bit hash value.
-  This value is typically calculated as a "SHA-512Half", which calculates a SHA-512 hash from some contents, then takes the first half of the output (That's 256 bits, which is 32 bytes, or 64 characters of the hexadecimal representation).
-  Since the hash of an object is derived from the contents in a way that is extremely unlikely to produce collisions, two objects with the same hash can be considered the same.
-
-  Official documentation: https://xrpl.org/basic-data-types.html#hashes
-  """
-  defguard is_hash(value) when is_binary(value) and byte_size(value) == 64
-
-  defguard is_ledger_index_shortcut(value) when value in ~w(current closed validated)
-
-  @doc """
-  Ledger Index is a type on the XRPL blockchain, usually expressed by an Int, a Hash or a String.
-
-  Official documentation: https://xrpl.org/basic-data-types.html#ledger-index
-  """
-  defguard is_ledger_index(value)
-           when is_hash(value) or
-                  is_binary(value) or
-                  is_integer(value) or
-                  is_ledger_index_shortcut(value)
-
-  @doc """
   Accounts in the XRP Ledger are identified by an address in the XRP Ledger's [base58][] format. The address is derived from the account's master public key, which is in turn derived from a secret key. An address is represented as a string in JSON and has the following characteristics:
 
   Between 25 and 35 characters in length
@@ -87,9 +66,9 @@ defmodule XRPL do
 
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/basic-data-types/#addresses
   """
-  def account_address_regex, do: ~r/^r[1-9a-np-zA-NP-Z]{24,34}$/
+  def account_address_regex, do: Application.get_env(:goal, :account_address_regex)
 
-  def public_key_regex, do: ~r/^n[1-9a-np-zA-NP-Z]{1,53}$/
+  def public_key_regex, do: Application.get_env(:goal, :public_key_regex)
 
   @doc """
   Each ledger entry has a unique ID. The ID is derived by hashing important contents of the entry, along with a namespace identifier. The ledger entry type determines the namespace identifier to use and which contents to include in the hash. This ensures every ID is unique. The hash function is SHA-512Half.
@@ -101,7 +80,7 @@ defmodule XRPL do
 
   Official documentation: https://xrpl.org/docs/references/protocol/ledger-data/common-fields/
   """
-  def ledger_entry_regex, do: ~r/^[a-fA-F0-9]{64}$/
+  def ledger_entry_regex, do: Application.get_env(:goal, :ledger_entry_regex)
 
   def ledger_hash_regex, do: ledger_entry_regex()
 
@@ -146,7 +125,7 @@ defmodule XRPL do
   Reporting Mode does not record ledger data until it has been validated. If you make a request to a Reporting Mode server for the current or closed ledger, the server forwards the request to a P2P Mode server. If you request a ledger index or hash that is not validated, a Reporting Mode server responds with a lgrNotFound error.
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/basic-data-types/#ledger-index
   """
-  def ledger_index_regex, do: ~r/^(\d+|current|closed|validated)$/
+  def ledger_index_regex, do: Application.get_env(:goal, :ledger_index_regex)
 
   @doc """
   The HTTP / WebSocket APIs support two formats of currency code:
@@ -157,7 +136,5 @@ defmodule XRPL do
 
   Official documentation: https://xrpl.org/docs/references/protocol/data-types/currency-formats/#currency-codes
   """
-  def currency_regex do
-    ~r/^(?!(XRP$))[A-Za-z0-9\?\!\@\#\$\%\^\&\*\(\)\{\}\[\]\|]{3}$|^(?![0]{2})[A-Fa-f0-9]{40}$/
-  end
+  def currency_regex, do: Application.get_env(:goal, :currency_regex)
 end

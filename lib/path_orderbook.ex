@@ -39,48 +39,48 @@ defmodule XRPL.PathOrderbook do
   def amm_info!(params), do: params |> amm_info() |> unwrap_or_raise()
 
   defparams "amm_info_string_string" do
-    optional(:account, :string, format: XRPL.account_address_regex())
-    optional(:amm_account, :string, format: XRPL.account_address_regex())
+    optional(:account, :string, format: :account_address)
+    optional(:amm_account, :string, format: :account_address)
     optional(:asset, :string, format: XRPL.currency_regex())
     optional(:asset2, :string, format: XRPL.currency_regex())
   end
 
   defparams "amm_info_object_string" do
-    optional(:account, :string, format: XRPL.account_address_regex())
-    optional(:amm_account, :string, format: XRPL.account_address_regex())
+    optional(:account, :string, format: :account_address)
+    optional(:amm_account, :string, format: :account_address)
 
     optional(:asset, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
 
     optional(:asset2, :string)
   end
 
   defparams "amm_info_string_object" do
-    optional(:account, :string, format: XRPL.account_address_regex())
-    optional(:amm_account, :string, format: XRPL.account_address_regex())
+    optional(:account, :string, format: :account_address)
+    optional(:amm_account, :string, format: :account_address)
 
     optional(:asset, :string)
 
     optional(:asset2, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
   end
 
   defparams "amm_info_object_object" do
-    optional(:account, :string, format: XRPL.account_address_regex())
-    optional(:amm_account, :string, format: XRPL.account_address_regex())
+    optional(:account, :string, format: :account_address)
+    optional(:amm_account, :string, format: :account_address)
 
     optional(:asset, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
 
     optional(:asset2, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
   end
 
@@ -99,18 +99,18 @@ defmodule XRPL.PathOrderbook do
   defparams "book_offers" do
     required(:taker_gets, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
 
     required(:taker_pays, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
     end
 
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
     optional(:limit, :integer)
-    optional(:taker, :string, format: XRPL.account_address_regex())
+    optional(:taker, :string, format: :account_address)
   end
 
   @doc """
@@ -125,8 +125,8 @@ defmodule XRPL.PathOrderbook do
   def deposit_authorized!(params), do: params |> deposit_authorized() |> unwrap_or_raise()
 
   defparams "deposit_authorized" do
-    required(:source_account, :string, format: XRPL.account_address_regex())
-    required(:destination_account, :string, format: XRPL.account_address_regex())
+    required(:source_account, :string, format: :account_address)
+    required(:destination_account, :string, format: :account_address)
     optional(:ledger_hash, :string, format: XRPL.ledger_hash_regex())
     optional(:ledger_index, :string, format: XRPL.ledger_index_regex())
   end
@@ -183,12 +183,12 @@ defmodule XRPL.PathOrderbook do
   def ripple_path_find!(params), do: params |> ripple_path_find() |> unwrap_or_raise()
 
   defparams "ripple_path_find" do
-    required(:source_account, :string, format: XRPL.account_address_regex())
-    required(:destination_account, :string, format: XRPL.account_address_regex())
+    required(:source_account, :string, format: :account_address)
+    required(:destination_account, :string, format: :account_address)
 
     required(:destination_amount, :map) do
       required(:currency, :string, format: XRPL.currency_regex())
-      optional(:issuer, :string, format: XRPL.account_address_regex())
+      optional(:issuer, :string, format: :account_address)
       required(:value, :string)
     end
 
