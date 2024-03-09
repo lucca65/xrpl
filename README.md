@@ -115,7 +115,7 @@ We also support exceptions so if you want to throw an exception instead of getti
 XRPL.Account.account_info!(%{account: "not_a_valid_account"})
 ```
 
-We also validate the parameters you pass to the functions. Some of the parameters are required and some are optional and you will get predictable (`Ecto.Changeset`)[https://hexdocs.pm/ecto/Ecto.html#module-changesets] validation errors if you pass something wrong.
+We also validate the parameters you pass to the functions. Some of the parameters are required and some are optional and you will get predictable [`Ecto.Changeset`](https://hexdocs.pm/ecto/Ecto.html#module-changesets) validation errors if you pass something wrong.
 
 
 ### Utilities
