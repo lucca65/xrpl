@@ -4,10 +4,10 @@ defmodule Xrpl.MixProject do
   def project do
     [
       app: :xrpl,
-      version: "0.1.0",
+      version: "1.0.0-rc",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      description: "XRPL HTTP client for Elixir",
+      description: "XRPL RPC client for Elixir",
       package: package(),
       aliases: aliases(),
       deps: deps(),
@@ -35,7 +35,7 @@ defmodule Xrpl.MixProject do
 
       # Validation
       # {:goal, "~> 0.2"},
-      {:goal, github: "lucca65/goal", branch: "regex"},
+      {:goal, github: "lucca65/goal", branch: "regex", override: true},
 
       # Dev
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
@@ -50,8 +50,9 @@ defmodule Xrpl.MixProject do
   defp package do
     [
       name: "xrpl",
+      description: "XRPL RPC client for Elixir",
       files: ~w(lib mix.exs README.md LICENSE),
-      licenses: ["AGPL-3.0-or-later"],
+      licenses: ["Apache-2.0"],
       maintainers: ["Julien Lucca"],
       links: %{"Github" => "https://github.com/lucca65/xrpl"}
     ]
