@@ -45,6 +45,28 @@ config :xrpl,
 
 We always use [`Map`](https://hexdocs.pm/elixir/1.16.1/Map.html)s to pass parameters to the functions. This is a design decision to make the code more readable and to avoid the need to remember the order of the parameters.
 
+We always follow the exact same object from the official documentation. For example, if you want to use the `account_info` command, you can pass the following parameters:
+
+```elixir
+params = %{
+  # Required
+  account: "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn", 
+  # Optional but validated against its format
+  ledger_hash: "F28F29CB91E3DD5DE2BAE9B794E48AEBD009F1AA8532BFCA391ADEBF96A498DD",
+  # Optional, String wrapped around an integer. Validated so it's a valid ledger index
+  ledger_index: "86500345",
+  queue: true,
+  signer_lists: true
+}
+```
+
+We also default some params to their official values, mainly with `bool`. 
+
+
+### Commands
+
+Our modules mirror the official docs and are simple and easy to understand:
+
 ```elixir
 iex> XRPL.Account.account_info(%{account: "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn"})
 {:ok,
