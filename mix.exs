@@ -4,7 +4,7 @@ defmodule Xrpl.MixProject do
   def project do
     [
       app: :xrpl,
-      version: "1.0.0-rc",
+      version: "1.0.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       description: "XRPL RPC client for Elixir",
@@ -34,8 +34,7 @@ defmodule Xrpl.MixProject do
       {:jason, ">= 1.0.0"},
 
       # Validation
-      # {:goal, "~> 0.2"},
-      {:goal, github: "lucca65/goal", branch: "regex", override: true},
+      {:goal, "~> 0.3.2"},
 
       # Dev
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},

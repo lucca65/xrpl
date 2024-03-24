@@ -50,7 +50,7 @@ We always follow the exact same object from the official documentation. For exam
 ```elixir
 params = %{
   # Required
-  account: "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn", 
+  account: "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
   # Optional but validated against its format
   ledger_hash: "F28F29CB91E3DD5DE2BAE9B794E48AEBD009F1AA8532BFCA391ADEBF96A498DD",
   # Optional, String wrapped around an integer. Validated so it's a valid ledger index
